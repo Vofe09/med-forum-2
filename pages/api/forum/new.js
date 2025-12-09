@@ -1,34 +1,39 @@
-// pages/api/forum/new.js
+import mysql from "mysql2/promise";
 
-// Временное хранилище тем (обнуляется при перезапуске сервера)
-let threads = [];
-let nextId = 1;
-
-export default function handler(req, res) {
-  if (req.method === "POST") {
-    const { title, text, author } = req.body;
-
-    if (!title || !text || !author) {
-      return res.status(400).json({ success: false, message: "Заполните все поля" });
-    }
-
-    const newThread = {
-      id: nextId++,
-      title,
-      text,
-      author,
-      createdAt: new Date().toISOString(),
-    };
-
-    threads.push(newThread);
-
-    return res.status(200).json({ success: true, threadId: newThread.id });
+export default async function handler(req, res) {
+  if (req.method !== "POST") {
+    return res.status(405).json({ message: "Метод не разрешён" });
   }
 
-  if (req.method === "GET") {
-    return res.status(200).json({ threads });
+  const { title, content, authorId } = req.body;
+
+  if (!title || !content || !authorId) {
+    return res.status(400).json({ message: "Заполните все поля" });
   }
 
-  res.setHeader("Allow", ["GET", "POST"]);
-  res.status(405).end(`Method ${req.method} Not Allowed`);
+  try {
+    const db = await mysql.createConnection({
+      host: process.env.TIDB_HOST,
+      user: process.env.TIDB_USER,
+      password: process.env.TIDB_PASSWORD,
+      database: "test",
+      ssl: { rejectUnauthorized: true }
+    });
+
+    const [result] = await db.execute(
+      "INSERT INTO threads (title, content, author_id) VALUES (?, ?, ?)",
+      [title, content, authorId]
+    );
+
+    await db.end();
+
+    return res.status(200).json({
+      success: true,
+      threadId: result.insertId
+    });
+
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ message: "Ошибка сервера" });
+  }
 }
