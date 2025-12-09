@@ -1,6 +1,6 @@
+// pages/forum/index.js
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import '../../styles/globals.css'; // подключение глобальных стилей
 
 export default function Forum() {
   const [categories, setCategories] = useState([]);
@@ -15,13 +15,17 @@ export default function Forum() {
   const [threadAuthor, setThreadAuthor] = useState("");
 
   useEffect(() => {
+    // Загрузка категорий
     fetch("/api/categories")
       .then(res => res.json())
-      .then(data => setCategories(Array.isArray(data) ? data : []));
+      .then(data => setCategories(Array.isArray(data) ? data : []))
+      .catch(() => setCategories([]));
 
+    // Загрузка корневых тем
     fetch("/api/threads/root")
       .then(res => res.json())
-      .then(data => setRootThreads(Array.isArray(data) ? data : []));
+      .then(data => setRootThreads(Array.isArray(data) ? data : []))
+      .catch(() => setRootThreads([]));
   }, []);
 
   const handleCreateCategory = async e => {
@@ -52,6 +56,7 @@ export default function Forum() {
     <div className="container">
       <h1>Форум</h1>
 
+      {/* Форма создания категории */}
       <form onSubmit={handleCreateCategory} className="form">
         <h3>Создать категорию</h3>
         <input placeholder="Название" value={catTitle} onChange={e => setCatTitle(e.target.value)} required />
@@ -60,6 +65,7 @@ export default function Forum() {
         <button type="submit">Создать категорию</button>
       </form>
 
+      {/* Форма создания корневой темы */}
       <form onSubmit={handleCreateRootThread} className="form">
         <h3>Создать тему в корне</h3>
         <input placeholder="Название темы" value={threadTitle} onChange={e => setThreadTitle(e.target.value)} required />
@@ -68,6 +74,7 @@ export default function Forum() {
         <button type="submit">Создать тему</button>
       </form>
 
+      {/* Корневые темы */}
       <h2>Темы в корне</h2>
       <ul className="categories">
         {rootThreads.map(thread => (
@@ -82,6 +89,7 @@ export default function Forum() {
         ))}
       </ul>
 
+      {/* Список категорий */}
       <h2>Категории</h2>
       <ul className="categories">
         {categories.map(cat => (
@@ -97,17 +105,69 @@ export default function Forum() {
       </ul>
 
       <style jsx>{`
-        .container { padding: 20px; background-color: var(--bg-light); min-height: 100vh; color: var(--text-dark); }
-        h1 { color: var(--blue-dark); }
-        .form { margin-bottom: 20px; padding: 15px; background-color: var(--soft-blue); border-radius: 10px; }
-        .form input { display: block; width: 100%; margin: 5px 0; padding: 8px; border-radius: 5px; border: 1px solid var(--blue-light); }
-        .form button { margin-top: 10px; padding: 8px 15px; background-color: var(--blue-main); border: none; border-radius: 5px; color: white; cursor: pointer; }
-        .form button:hover { background-color: var(--blue-dark); }
-        .categories { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; }
-        .category-card { background-color: var(--soft-blue); border-left: 5px solid var(--blue-main); padding: 15px; border-radius: 10px; cursor: pointer; transition: background-color 0.2s, transform 0.2s; }
-        .category-card:hover { background-color: var(--blue-hover); transform: translateY(-3px); }
-        .card-content h3 { margin: 0 0 8px; color: var(--blue-dark); }
-        .card-content p { margin: 0; color: var(--text-dark); font-size: 0.9rem; }
+        .container {
+          padding: 20px;
+          background-color: #e6f8f7;
+          min-height: 100vh;
+          color: #1e293b;
+        }
+        h1 {
+          color: #1f7a73;
+        }
+        .form {
+          margin-bottom: 20px;
+          padding: 15px;
+          background-color: #d0f8f5;
+          border-radius: 10px;
+        }
+        .form input {
+          display: block;
+          width: 100%;
+          margin: 5px 0;
+          padding: 8px;
+          border-radius: 5px;
+          border: 1px solid #76e0d1;
+        }
+        .form button {
+          margin-top: 10px;
+          padding: 8px 15px;
+          background-color: #4fd1c5;
+          border: none;
+          border-radius: 5px;
+          color: white;
+          cursor: pointer;
+        }
+        .form button:hover {
+          background-color: #1f7a73;
+        }
+        .categories {
+          list-style: none;
+          padding: 0;
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+          gap: 15px;
+        }
+        .category-card {
+          background-color: #d0f8f5;
+          border-left: 5px solid #4fd1c5;
+          padding: 15px;
+          border-radius: 10px;
+          cursor: pointer;
+          transition: background-color 0.2s, transform 0.2s;
+        }
+        .category-card:hover {
+          background-color: #a0f0ea;
+          transform: translateY(-3px);
+        }
+        .card-content h3 {
+          margin: 0 0 8px;
+          color: #1f7a73;
+        }
+        .card-content p {
+          margin: 0;
+          color: #1e293b;
+          font-size: 0.9rem;
+        }
       `}</style>
     </div>
   );
