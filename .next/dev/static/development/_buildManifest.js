@@ -5,9 +5,6 @@ self.__BUILD_MANIFEST = {
   "/_error": [
     "static/chunks/pages/_error.js"
   ],
-  "/forum/new": [
-    "static/chunks/pages/forum/new.js"
-  ],
   "__rewrites": {
     "afterFiles": [],
     "beforeFiles": [],
@@ -17,10 +14,14 @@ self.__BUILD_MANIFEST = {
     "/",
     "/_app",
     "/_error",
-    "/api/forum/new",
+    "/api/categories",
+    "/api/categories/[id]/posts",
+    "/api/categories/[id]/threads",
     "/api/login",
     "/api/register",
     "/api/test",
-    "/forum/new"
+    "/forum",
+    "/forum/[categoryId]",
+    "/thread/[threadId]"
   ]
 };self.__BUILD_MANIFEST_CB && self.__BUILD_MANIFEST_CB()

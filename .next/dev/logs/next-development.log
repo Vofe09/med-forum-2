@@ -1,14 +1,54 @@
-[00:00:01.375] Server  LOG      ✓ Ready in 945ms
-[00:00:04.785] Server  WARN     ⚠ Cross origin request detected from 192.168.0.89 to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+[00:00:00.677] Server  WARN     ⚠ "Found lockfile missing swc dependencies," "patching..."
+[00:00:01.198] Server  LOG      ✓ Ready in 880ms
+[00:00:03.170] Server  WARN     ⚠ Lockfile was successfully patched, please run "npm install" to ensure @next/swc dependencies are downloaded
+[00:00:09.379] Server  WARN     ⚠ Cross origin request detected from 192.168.0.89 to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
 Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
-[00:00:05.044] Browser LOG     {}
-[00:00:08.681] Server  ERROR   C:\forum2\.next\dev\server\chunks\[root-of-the-server]__8053517b._.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
-[00:00:08.693] Server  ERROR   C:\forum2\node_modules\next\dist\compiled\next-server\pages-api-turbo.runtime.dev.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
-[00:00:08.697] Server  ERROR   C:\forum2\.next\dev\server\chunks\node_modules_next_dist_44a67b2e._.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
-[00:00:08.700] Server  ERROR   C:\forum2\node_modules\next\dist\server\next-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
-[00:00:08.703] Server  ERROR   C:\forum2\node_modules\next\dist\server\base-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
-[00:00:08.705] Server  ERROR   C:\forum2\node_modules\next\dist\server\dev\next-dev-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
-[00:00:08.705] Server  ERROR   C:\forum2\node_modules\next\dist\trace\trace.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
-[00:00:08.707] Server  ERROR   C:\forum2\node_modules\next\dist\server\lib\router-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
-[00:00:08.708] Server  ERROR   C:\forum2\node_modules\next\dist\server\lib\start-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
-[00:00:08.709] Server  LOG     Error: self-signed certificate in certificate chain
+[00:00:39.085] Server  ERROR   C:\forum2\.next\dev\server\chunks\[root-of-the-server]__4286d994._.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[00:00:39.094] Server  ERROR   C:\forum2\node_modules\next\dist\compiled\next-server\pages-api-turbo.runtime.dev.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[00:00:39.102] Server  ERROR   C:\forum2\.next\dev\server\chunks\node_modules_next_dist_d9c32168._.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[00:00:39.104] Server  ERROR   C:\forum2\node_modules\next\dist\server\next-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[00:00:39.107] Server  ERROR   C:\forum2\node_modules\next\dist\server\base-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[00:00:39.108] Server  ERROR   C:\forum2\node_modules\next\dist\server\dev\next-dev-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[00:00:39.109] Server  ERROR   C:\forum2\node_modules\next\dist\trace\trace.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[00:00:39.110] Server  ERROR   C:\forum2\node_modules\next\dist\server\lib\router-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[00:00:39.111] Server  ERROR   C:\forum2\node_modules\next\dist\server\lib\start-server.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[00:00:39.114] Server  ERROR   Error: Table 'test.categories' doesn't exist
+[00:00:39.234] Browser ERROR   %o
+
+%s
+
+%s
+ {} The above error occurred in the <Forum> component. React will try to recreate this component tree from scratch using the error boundary you provided, PagesDevOverlayErrorBoundary.
+[00:03:51.866] Server  ERROR   C:\forum2\.next\dev\server\chunks\ssr\node_modules_59284a38._.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[00:03:51.867] Server  ERROR   Error: Invalid <Link> with <a> child. Please remove <a> or use <Link legacyBehavior>.
+Learn more: https://nextjs.org/docs/messages/invalid-new-link-with-extra-anchor
+[00:03:51.869] Server  ERROR   C:\forum2\.next\dev\server\chunks\ssr\node_modules_59284a38._.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[00:03:51.870] Server  ERROR    ⨯ Error: Invalid <Link> with <a> child. Please remove <a> or use <Link legacyBehavior>.
+Learn more: https://nextjs.org/docs/messages/invalid-new-link-with-extra-anchor
+[00:03:51.871] Server  ERROR   C:\forum2\.next\dev\server\chunks\ssr\node_modules_59284a38._.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[00:03:51.872] Server  ERROR    ⨯ Error: Invalid <Link> with <a> child. Please remove <a> or use <Link legacyBehavior>.
+Learn more: https://nextjs.org/docs/messages/invalid-new-link-with-extra-anchor
+[00:03:52.091] Browser ERROR   uncaughtError: Error: Invalid <Link> with <a> child. Please remove <a> or use <Link legacyBehavior>.
+Learn more: https://nextjs.org/docs/messages/invalid-new-link-with-extra-anchor
+[00:03:55.582] Server  ERROR   C:\forum2\.next\dev\server\chunks\ssr\node_modules_59284a38._.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[00:03:55.582] Server  ERROR   Error: Invalid <Link> with <a> child. Please remove <a> or use <Link legacyBehavior>.
+Learn more: https://nextjs.org/docs/messages/invalid-new-link-with-extra-anchor
+[00:03:55.583] Server  ERROR   C:\forum2\.next\dev\server\chunks\ssr\node_modules_59284a38._.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[00:03:55.583] Server  ERROR    ⨯ Error: Invalid <Link> with <a> child. Please remove <a> or use <Link legacyBehavior>.
+Learn more: https://nextjs.org/docs/messages/invalid-new-link-with-extra-anchor
+[00:03:55.584] Server  ERROR   C:\forum2\.next\dev\server\chunks\ssr\node_modules_59284a38._.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[00:03:55.585] Server  ERROR    ⨯ Error: Invalid <Link> with <a> child. Please remove <a> or use <Link legacyBehavior>.
+Learn more: https://nextjs.org/docs/messages/invalid-new-link-with-extra-anchor
+[00:03:55.662] Browser ERROR   uncaughtError: Error: Invalid <Link> with <a> child. Please remove <a> or use <Link legacyBehavior>.
+Learn more: https://nextjs.org/docs/messages/invalid-new-link-with-extra-anchor
+[00:03:56.252] Server  ERROR   C:\forum2\.next\dev\server\chunks\ssr\node_modules_59284a38._.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[00:03:56.253] Server  ERROR   Error: Invalid <Link> with <a> child. Please remove <a> or use <Link legacyBehavior>.
+Learn more: https://nextjs.org/docs/messages/invalid-new-link-with-extra-anchor
+[00:03:56.254] Server  ERROR   C:\forum2\.next\dev\server\chunks\ssr\node_modules_59284a38._.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[00:03:56.254] Server  ERROR    ⨯ Error: Invalid <Link> with <a> child. Please remove <a> or use <Link legacyBehavior>.
+Learn more: https://nextjs.org/docs/messages/invalid-new-link-with-extra-anchor
+[00:03:56.255] Server  ERROR   C:\forum2\.next\dev\server\chunks\ssr\node_modules_59284a38._.js: Invalid source map. Only conformant source maps can be used to find the original code. Cause: Error: sourceMapURL could not be parsed
+[00:03:56.255] Server  ERROR    ⨯ Error: Invalid <Link> with <a> child. Please remove <a> or use <Link legacyBehavior>.
+Learn more: https://nextjs.org/docs/messages/invalid-new-link-with-extra-anchor
+[00:03:56.322] Browser ERROR   uncaughtError: Error: Invalid <Link> with <a> child. Please remove <a> or use <Link legacyBehavior>.
+Learn more: https://nextjs.org/docs/messages/invalid-new-link-with-extra-anchor
