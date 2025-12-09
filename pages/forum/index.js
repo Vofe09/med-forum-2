@@ -1,6 +1,11 @@
 // pages/forum/index.js
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import '../styles/globals.css';
+
+export default function App({ Component, pageProps }) {
+  return <Component {...pageProps} />;
+}
 
 export default function Forum() {
   const [categories, setCategories] = useState([]);

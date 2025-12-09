@@ -1,0 +1,19 @@
+:root {
+  --bg-light: #e6f8f7;
+  --blue-main: #4fd1c5;
+  --blue-light: #76e0d1;
+  --blue-hover: #a0f0ea;
+  --text-dark: #1e293b;
+  --green-accent: #34d399;
+  --warning-accent: #facc15;
+  --blue-dark: #1f7a73;
+  --soft-blue: #d0f8f5;
+}
+
+/* Можно добавить базовые стили */
+body {
+  margin: 0;
+  font-family: sans-serif;
+  background-color: var(--bg-light);
+  color: var(--text-dark);
+}
