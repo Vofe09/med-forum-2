@@ -1,63 +1,113 @@
+// pages/thread/[threadId].js
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
-export default function Thread() {
+export default function ThreadPage() {
   const router = useRouter();
   const { threadId } = router.query;
 
-  const [posts, setPosts] = useState([]);
-  const [content, setContent] = useState("");
-  const [author, setAuthor] = useState("");
+  const [thread, setThread] = useState(null);
+  const [newTitle, setNewTitle] = useState("");
+  const [newSlug, setNewSlug] = useState("");
+  const [newAuthor, setNewAuthor] = useState("");
 
   useEffect(() => {
     if (!threadId) return;
-    fetch(`/api/threads/${threadId}/posts`)
-      .then((res) => res.json())
-      .then((data) => setPosts(data));
+    fetch(`/api/threads/${threadId}`)
+      .then(res => res.json())
+      .then(data => setThread(data))
+      .catch(() => setThread(null));
   }, [threadId]);
 
-  const handleAddPost = async (e) => {
+  const handleCreateThread = async (e) => {
     e.preventDefault();
-    const res = await fetch(`/api/threads/${threadId}/posts`, {
+    const res = await fetch(`/api/threads/root`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ author, content }),
+      body: JSON.stringify({ title: newTitle, slug: newSlug, author: newAuthor }),
     });
-    const newPost = await res.json();
-    setPosts([...posts, newPost]);
-    setContent("");
-    setAuthor("");
+    const newThread = await res.json();
+    setNewTitle(""); setNewSlug(""); setNewAuthor("");
+    alert(`Тема "${newThread.title}" создана!`);
   };
 
-  return (
-    <div style={{ padding: "20px" }}>
-      <h1>Тема {threadId}</h1>
+  if (!thread) return <div style={{ padding: "20px" }}>Загрузка темы...</div>;
 
-      <form onSubmit={handleAddPost} style={{ marginBottom: "20px" }}>
-        <h3>Написать сообщение</h3>
-        <input
-          placeholder="Ваше имя"
-          value={author}
-          onChange={(e) => setAuthor(e.target.value)}
-        />
-        <textarea
-          placeholder="Сообщение"
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          required
-          rows={4}
-          style={{ width: "100%" }}
-        />
-        <button type="submit">Отправить</button>
+  return (
+    <div className="container">
+      <h1>{thread.title}</h1>
+      <p className="author">Автор: {thread.author || "Guest"}</p>
+
+      <div className="description">
+        <h3>Описание темы</h3>
+        <p>{thread.description || "Описание отсутствует"}</p>
+      </div>
+
+      <form onSubmit={handleCreateThread} className="form">
+        <h3>Создать новую тему</h3>
+        <input placeholder="Название темы" value={newTitle} onChange={e => setNewTitle(e.target.value)} required />
+        <input placeholder="Slug темы" value={newSlug} onChange={e => setNewSlug(e.target.value)} required />
+        <input placeholder="Автор" value={newAuthor} onChange={e => setNewAuthor(e.target.value)} />
+        <button type="submit">Создать тему</button>
       </form>
 
-      <ul>
-        {posts.map((post) => (
-          <li key={post.id}>
-            <b>{post.author || "Guest"}:</b> {post.content} <i>({post.created_at})</i>
-          </li>
-        ))}
-      </ul>
+      <Link href="/forum">
+        <a className="back-link">← Вернуться к форуму</a>
+      </Link>
+
+      <style jsx>{`
+        .container {
+          padding: 20px;
+          background-color: #e6f8f7;
+          min-height: 100vh;
+          color: #1e293b;
+        }
+        h1 { color: #1f7a73; margin-bottom: 5px; }
+        .author { color: #34d399; margin-bottom: 15px; font-weight: bold; }
+        .description {
+          background-color: #d0f8f5;
+          padding: 15px;
+          border-left: 5px solid #4fd1c5;
+          border-radius: 10px;
+          margin-bottom: 25px;
+        }
+        .description h3 { margin-top: 0; color: #1f7a73; }
+        .description p { margin: 0; color: #1e293b; font-size: 0.95rem; }
+
+        .form {
+          padding: 15px;
+          background-color: #d0f8f5;
+          border-radius: 10px;
+          margin-bottom: 20px;
+        }
+        .form input {
+          display: block;
+          width: 100%;
+          margin: 5px 0;
+          padding: 8px;
+          border-radius: 5px;
+          border: 1px solid #76e0d1;
+        }
+        .form button {
+          margin-top: 10px;
+          padding: 8px 15px;
+          background-color: #4fd1c5;
+          border: none;
+          border-radius: 5px;
+          color: white;
+          cursor: pointer;
+        }
+        .form button:hover { background-color: #1f7a73; }
+
+        .back-link {
+          display: inline-block;
+          margin-top: 15px;
+          color: #1f7a73;
+          text-decoration: none;
+        }
+        .back-link:hover { color: #4fd1c5; }
+      `}</style>
     </div>
   );
 }
