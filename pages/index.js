@@ -1,5 +1,5 @@
 // pages/forum/index.js
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function ForumPage() {
   const [loginModalOpen, setLoginModalOpen] = useState(false);
@@ -12,6 +12,16 @@ export default function ForumPage() {
   const [regEmail, setRegEmail] = useState("");
   const [regPassword, setRegPassword] = useState("");
   const [regPassword2, setRegPassword2] = useState("");
+
+  const [threads, setThreads] = useState([]);
+
+  // ======== LOAD THREADS =========
+  useEffect(() => {
+    fetch("/api/forum/getThreads")
+      .then(r => r.json())
+      .then(data => setThreads(data.threads || []))
+      .catch(err => console.log(err));
+  }, []);
 
   // ======== LOGIN =========
   const handleLogin = async () => {
@@ -66,6 +76,7 @@ export default function ForumPage() {
 
   return (
     <div style={{ background: "#e6f8f7", minHeight: "100vh", fontFamily: "Arial, sans-serif" }}>
+
       {/* ======== TOP BAR ======== */}
       <div style={{
         width: "100%",
@@ -105,9 +116,52 @@ export default function ForumPage() {
         <div style={{ fontSize: 28, fontWeight: "bold", color: "#1f7a73", textAlign: "center", marginBottom: 20 }}>
           Темы форума
         </div>
-        <p style={{ textAlign: "center", color: "#1e293b", fontSize: 18 }}>
-          Здесь в будущем появятся темы, обсуждения и разделы.
-        </p>
+
+        <div style={{ marginTop: 20 }}>
+          <button
+            onClick={() => window.location.href = "/forum/new"}
+            style={{
+              background: "#4fd1c5",
+              color: "white",
+              border: "none",
+              padding: "10px 18px",
+              borderRadius: 12,
+              cursor: "pointer",
+              fontWeight: "bold",
+              marginBottom: 20
+            }}
+          >
+            ➕ Создать новую тему
+          </button>
+
+          {threads.length === 0 && (
+            <p style={{ color: "#1e293b", fontSize: 18, textAlign: "center" }}>
+              Тем пока нет. Создайте первую!
+            </p>
+          )}
+
+          {threads.map(t => (
+            <div
+              key={t.id}
+              onClick={() => window.location.href = `/forum/${t.id}`}
+              style={{
+                background: "white",
+                padding: 18,
+                borderRadius: 12,
+                marginBottom: 12,
+                cursor: "pointer",
+                boxShadow: "0 4px 12px rgba(0,0,0,0.1)"
+              }}
+            >
+              <div style={{ fontSize: 20, fontWeight: "bold", color: "#1f7a73" }}>
+                {t.title}
+              </div>
+              <div style={{ fontSize: 14, color: "#475569" }}>
+                Автор: {t.author} | {new Date(t.createdAt).toLocaleString()}
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* ======== LOGIN MODAL ======== */}
@@ -137,6 +191,7 @@ export default function ForumPage() {
           </div>
         </div>
       )}
+
     </div>
   );
 }
