@@ -1,3 +1,4 @@
+// pages/forum/[categoryId].js
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
@@ -15,7 +16,8 @@ export default function Category() {
     if (!categoryId) return;
     fetch(`/api/categories/${categoryId}/threads`)
       .then((res) => res.json())
-      .then((data) => setThreads(data));
+      .then((data) => setThreads(Array.isArray(data) ? data : []))
+      .catch(() => setThreads([]));
   }, [categoryId]);
 
   const handleCreateThread = async (e) => {
@@ -33,10 +35,11 @@ export default function Category() {
   };
 
   return (
-    <div style={{ padding: "20px" }}>
+    <div className="container">
       <h1>Темы категории {categoryId}</h1>
 
-      <form onSubmit={handleCreateThread} style={{ marginBottom: "20px" }}>
+      {/* Форма создания темы */}
+      <form onSubmit={handleCreateThread} className="form">
         <h3>Создать новую тему</h3>
         <input
           placeholder="Название темы"
@@ -58,16 +61,87 @@ export default function Category() {
         <button type="submit">Создать тему</button>
       </form>
 
-      <ul>
+      {/* Список тем */}
+      <ul className="threads">
         {threads.map((thread) => (
-          <li key={thread.id}>
+          <li key={thread.id} className="thread-card">
             <Link href={`/thread/${thread.id}`}>
-              <a>{thread.title}</a>
-            </Link>{" "}
-            - {thread.author}
+              <div className="card-content">
+                <h3>{thread.title}</h3>
+                <p>Автор: {thread.author || "Guest"}</p>
+              </div>
+            </Link>
           </li>
         ))}
       </ul>
+
+      <style jsx>{`
+        .container {
+          padding: 20px;
+          background-color: #e6f8f7;
+          min-height: 100vh;
+          color: #1e293b;
+        }
+        h1 {
+          color: #1f7a73;
+          margin-bottom: 20px;
+        }
+        .form {
+          padding: 15px;
+          background-color: #d0f8f5;
+          border-radius: 10px;
+          margin-bottom: 25px;
+        }
+        .form input {
+          display: block;
+          width: 100%;
+          margin: 5px 0;
+          padding: 8px;
+          border-radius: 5px;
+          border: 1px solid #76e0d1;
+        }
+        .form button {
+          margin-top: 10px;
+          padding: 8px 15px;
+          background-color: #4fd1c5;
+          border: none;
+          border-radius: 5px;
+          color: white;
+          cursor: pointer;
+        }
+        .form button:hover {
+          background-color: #1f7a73;
+        }
+
+        .threads {
+          list-style: none;
+          padding: 0;
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+          gap: 15px;
+        }
+        .thread-card {
+          background-color: #d0f8f5;
+          border-left: 5px solid #4fd1c5;
+          padding: 15px;
+          border-radius: 10px;
+          cursor: pointer;
+          transition: background-color 0.2s, transform 0.2s;
+        }
+        .thread-card:hover {
+          background-color: #a0f0ea;
+          transform: translateY(-3px);
+        }
+        .card-content h3 {
+          margin: 0 0 8px;
+          color: #1f7a73;
+        }
+        .card-content p {
+          margin: 0;
+          color: #1e293b;
+          font-size: 0.9rem;
+        }
+      `}</style>
     </div>
   );
 }
