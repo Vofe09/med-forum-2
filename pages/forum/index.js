@@ -3,8 +3,6 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import '../styles/globals.css';
 
-export default function Forum() {
-}
 
 export default function Forum() {
   const [categories, setCategories] = useState([]);
