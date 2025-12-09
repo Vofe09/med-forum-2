@@ -13,11 +13,14 @@ export default async function handler(req, res) {
 
   try {
     const db = await mysql.createConnection({
-      host: process.env.TIDB_HOST,
-      user: process.env.TIDB_USER,
-      password: process.env.TIDB_PASSWORD,
-      database: "test",
-      ssl: { rejectUnauthorized: true }
+      host: process.env.DB_HOST,
+      user: process.env.DB_USER,
+      password: process.env.DB_PASS,
+      port: Number(process.env.DB_PORT), // ← очень важно для TiDB
+      database: process.env.DB_NAME,
+      ssl: {
+        minVersion: "TLSv1.2"
+      }
     });
 
     const [result] = await db.execute(
@@ -33,7 +36,10 @@ export default async function handler(req, res) {
     });
 
   } catch (err) {
-    console.log(err);
-    return res.status(500).json({ message: "Ошибка сервера" });
+    console.error("TiDB ERROR:", err);
+    return res.status(500).json({
+      message: "Ошибка сервера",
+      error: err.message
+    });
   }
 }
