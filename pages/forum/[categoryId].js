@@ -68,7 +68,14 @@ export default function Category() {
             <Link href={`/thread/${thread.id}`}>
               <div className="card-content">
                 <h3>{thread.title}</h3>
-                <p>Автор: {thread.author || "Guest"}</p>
+                <p className="author">Автор: {thread.author || "Guest"}</p>
+                <p className="description">
+                  {thread.description
+                    ? thread.description.length > 120
+                      ? thread.description.slice(0, 120) + "..."
+                      : thread.description
+                    : "Описание отсутствует"}
+                </p>
               </div>
             </Link>
           </li>
@@ -136,7 +143,12 @@ export default function Category() {
           margin: 0 0 8px;
           color: #1f7a73;
         }
-        .card-content p {
+        .card-content .author {
+          margin: 0 0 8px;
+          color: #34d399;
+          font-size: 0.9rem;
+        }
+        .card-content .description {
           margin: 0;
           color: #1e293b;
           font-size: 0.9rem;
