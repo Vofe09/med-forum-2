@@ -15,14 +15,14 @@ export default function NewThreadPage() {
       const res = await fetch("/api/forum/new", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title, content, author }),
+        body: JSON.stringify({ title, text: content, author }), // <-- FIX
       });
 
       const data = await res.json();
 
       if (res.ok) {
         alert("Тема создана!");
-        window.location.href = `/forum/${data.id}`;
+        window.location.href = `/forum/${data.threadId}`;
       } else {
         alert(data.message || "Ошибка создания темы");
       }
@@ -31,6 +31,7 @@ export default function NewThreadPage() {
       alert("Сервер недоступен");
     }
   };
+
 
   return (
     <div style={{
