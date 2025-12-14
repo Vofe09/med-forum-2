@@ -1,6 +1,7 @@
 // pages/subtopic/[id].js
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import '/css/subtopic.css'; // если файл в public/css
 import Link from 'next/link';
 
 export default function Subtopic() {
