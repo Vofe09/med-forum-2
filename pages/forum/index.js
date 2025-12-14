@@ -1,174 +1,280 @@
-// pages/forum/index.js
-import { useEffect, useState } from "react";
-import Link from "next/link";
+// pages/index.js
+import Head from 'next/head';
+import Link from 'next/link';
 
-export default function Forum() {
-  const [categories, setCategories] = useState([]);
-  const [rootThreads, setRootThreads] = useState([]);
-
-  const [catTitle, setCatTitle] = useState("");
-  const [catSlug, setCatSlug] = useState("");
-  const [catDesc, setCatDesc] = useState("");
-
-  const [threadTitle, setThreadTitle] = useState("");
-  const [threadSlug, setThreadSlug] = useState("");
-  const [threadAuthor, setThreadAuthor] = useState("");
-
-  useEffect(() => {
-    // Загрузка категорий
-    fetch("/api/categories")
-      .then(res => res.json())
-      .then(data => setCategories(Array.isArray(data) ? data : []))
-      .catch(() => setCategories([]));
-
-    // Загрузка корневых тем
-    fetch("/api/threads/root")
-      .then(res => res.json())
-      .then(data => setRootThreads(Array.isArray(data) ? data : []))
-      .catch(() => setRootThreads([]));
-  }, []);
-
-  const handleCreateCategory = async e => {
-    e.preventDefault();
-    const res = await fetch("/api/categories", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title: catTitle, slug: catSlug, description: catDesc }),
-    });
-    const newCat = await res.json();
-    setCategories([newCat, ...categories]);
-    setCatTitle(""); setCatSlug(""); setCatDesc("");
-  };
-
-  const handleCreateRootThread = async e => {
-    e.preventDefault();
-    const res = await fetch("/api/threads/root", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title: threadTitle, slug: threadSlug, author: threadAuthor }),
-    });
-    const newThread = await res.json();
-    setRootThreads([newThread, ...rootThreads]);
-    setThreadTitle(""); setThreadSlug(""); setThreadAuthor("");
-  };
-
+export default function Home() {
   return (
-    <div className="container">
-      <h1>Форум</h1>
+    <>
+      <Head>
+        <title>Forum Replica — LSPD</title>
+        <meta charSet="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"
+        />
+        <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+        />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
+          rel="stylesheet"
+        />
+        <link rel="stylesheet" href="/css/style.css" />
+      </Head>
 
-      {/* Форма создания категории */}
-      <form onSubmit={handleCreateCategory} className="form">
-        <h3>Создать категорию</h3>
-        <input placeholder="Название" value={catTitle} onChange={e => setCatTitle(e.target.value)} required />
-        <input placeholder="Slug" value={catSlug} onChange={e => setCatSlug(e.target.value)} required />
-        <input placeholder="Описание" value={catDesc} onChange={e => setCatDesc(e.target.value)} />
-        <button type="submit">Создать категорию</button>
-      </form>
+      <div className="theme-dark">
+        <header className="topbar">
+          <div className="container">
+            <div className="logo">Arizona RP</div>
+            <nav className="nav">
+              <Link href="#">Форумы</Link>
+              <Link href="#">Помощь</Link>
+              <Link href="#">Профиль</Link>
+            </nav>
+          </div>
+        </header>
 
-      {/* Форма создания корневой темы */}
-      <form onSubmit={handleCreateRootThread} className="form">
-        <h3>Создать тему в корне</h3>
-        <input placeholder="Название темы" value={threadTitle} onChange={e => setThreadTitle(e.target.value)} required />
-        <input placeholder="Slug темы" value={threadSlug} onChange={e => setThreadSlug(e.target.value)} required />
-        <input placeholder="Автор" value={threadAuthor} onChange={e => setThreadAuthor(e.target.value)} />
-        <button type="submit">Создать тему</button>
-      </form>
-
-      {/* Корневые темы */}
-      <h2>Темы в корне</h2>
-      <ul className="categories">
-        {rootThreads.map(thread => (
-          <li key={thread.id} className="category-card">
-            <Link href={`/thread/${thread.id}`}>
-              <div className="card-content">
-                <h3>{thread.title}</h3>
-                <p>Автор: {thread.author || "Guest"}</p>
+        <main className="container">
+          {/* CATEGORY 1 */}
+          <section className="forum-category">
+            <h2>1. Общение и взаимопомощь</h2>
+            <div className="forum-node">
+              <div className="node-main">
+                <Link href="/subtopic/1-1" className="node-title">
+                  1.1 Для студентов
+                </Link>
+                <p className="node-desc">
+                  Вопросы по обучению, экзамены, практика, опыт разных курсов и
+                  вузов
+                </p>
               </div>
-            </Link>
-          </li>
-        ))}
-      </ul>
-
-      {/* Список категорий */}
-      <h2>Категории</h2>
-      <ul className="categories">
-        {categories.map(cat => (
-          <li key={cat.id} className="category-card">
-            <Link href={`/forum/${cat.id}`}>
-              <div className="card-content">
-                <h3>{cat.title}</h3>
-                <p>{cat.description || "Нет описания"}</p>
+              <div className="node-stats">
+                <span>Тем: 120</span>
+                <span>Сообщений: 1 430</span>
               </div>
-            </Link>
-          </li>
-        ))}
-      </ul>
+            </div>
+            <div className="forum-node">
+              <div className="node-main">
+                <Link href="/subtopic/1-2" className="node-title">
+                  1.2 Для медицинских работников
+                </Link>
+                <p className="node-desc">
+                  Рабочие ситуации, протоколы, организация отделений,
+                  выгорание
+                </p>
+              </div>
+              <div className="node-stats">
+                <span>Тем: 98</span>
+                <span>Сообщений: 2 012</span>
+              </div>
+            </div>
+            <div className="forum-node">
+              <div className="node-main">
+                <Link href="/subtopic/1-3" className="node-title">
+                  1.3 Студенты ↔ Специалисты
+                </Link>
+                <p className="node-desc">
+                  Консультации, «Спросить у врача», менторство и
+                  наставничество
+                </p>
+              </div>
+              <div className="node-stats">
+                <span>Тем: 76</span>
+                <span>Сообщений: 845</span>
+              </div>
+            </div>
+          </section>
 
-      <style jsx>{`
-        .container {
-          padding: 20px;
-          background-color: #e6f8f7;
-          min-height: 100vh;
-          color: #1e293b;
-        }
-        h1 {
-          color: #1f7a73;
-        }
-        .form {
-          margin-bottom: 20px;
-          padding: 15px;
-          background-color: #d0f8f5;
-          border-radius: 10px;
-        }
-        .form input {
-          display: block;
-          width: 100%;
-          margin: 5px 0;
-          padding: 8px;
-          border-radius: 5px;
-          border: 1px solid #76e0d1;
-        }
-        .form button {
-          margin-top: 10px;
-          padding: 8px 15px;
-          background-color: #4fd1c5;
-          border: none;
-          border-radius: 5px;
-          color: white;
-          cursor: pointer;
-        }
-        .form button:hover {
-          background-color: #1f7a73;
-        }
-        .categories {
-          list-style: none;
-          padding: 0;
-          display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-          gap: 15px;
-        }
-        .category-card {
-          background-color: #d0f8f5;
-          border-left: 5px solid #4fd1c5;
-          padding: 15px;
-          border-radius: 10px;
-          cursor: pointer;
-          transition: background-color 0.2s, transform 0.2s;
-        }
-        .category-card:hover {
-          background-color: #a0f0ea;
-          transform: translateY(-3px);
-        }
-        .card-content h3 {
-          margin: 0 0 8px;
-          color: #1f7a73;
-        }
-        .card-content p {
-          margin: 0;
-          color: #1e293b;
-          font-size: 0.9rem;
-        }
-      `}</style>
-    </div>
+          {/* CATEGORY 2 */}
+          <section className="forum-category">
+            <h2>2. Клинические темы</h2>
+            <div className="forum-node">
+              <div className="node-main">
+                <Link href="/subtopic/2-1" className="node-title">
+                  2.1 Терапия
+                </Link>
+                <p className="node-desc">
+                  Частые случаи, неотложные состояния, разбор сложных кейсов
+                </p>
+              </div>
+              <div className="node-stats">
+                <span>Тем: 210</span>
+                <span>Сообщений: 3 540</span>
+              </div>
+            </div>
+            <div className="forum-node">
+              <div className="node-main">
+                <Link href="/subtopic/2-2" className="node-title">
+                  2.2 Хирургия
+                </Link>
+                <p className="node-desc">
+                  Операции, осложнения, травматология и ортопедия
+                </p>
+              </div>
+              <div className="node-stats">
+                <span>Тем: 154</span>
+                <span>Сообщений: 2 980</span>
+              </div>
+            </div>
+            <div className="forum-node">
+              <div className="node-main">
+                <Link href="/subtopic/2-3" className="node-title">
+                  2.3 Педиатрия
+                </Link>
+                <p className="node-desc">
+                  Диагностика, инфекции, ведение детей в ОРИТ
+                </p>
+              </div>
+              <div className="node-stats">
+                <span>Тем: 89</span>
+                <span>Сообщений: 1 120</span>
+              </div>
+            </div>
+            <div className="forum-node">
+              <div className="node-main">
+                <Link href="/subtopic/2-4" className="node-title">
+                  2.4 Гинекология / Акушерство
+                </Link>
+                <p className="node-desc">
+                  Беременность, неотложные состояния, плановое ведение
+                </p>
+              </div>
+              <div className="node-stats">
+                <span>Тем: 67</span>
+                <span>Сообщений: 910</span>
+              </div>
+            </div>
+            <div className="forum-node">
+              <div className="node-main">
+                <Link href="/subtopic/2-5" className="node-title">
+                  2.5 Диагностика
+                </Link>
+                <p className="node-desc">
+                  Анализы, КТ / МРТ / рентген, дифференциальная диагностика
+                </p>
+              </div>
+              <div className="node-stats">
+                <span>Тем: 132</span>
+                <span>Сообщений: 2 300</span>
+              </div>
+            </div>
+          </section>
+
+          {/* CATEGORY 3 */}
+          <section className="forum-category">
+            <h2>3. Кейсы и ситуации</h2>
+            <div className="forum-node">
+              <div className="node-main">
+                <Link href="/subtopic/3-1" className="node-title">
+                  3.1 Реальные случаи (анонимно)
+                </Link>
+                <p className="node-desc">
+                  Лёгкие, средние, тяжёлые и редкие клинические случаи
+                </p>
+              </div>
+              <div className="node-stats">
+                <span>Тем: 145</span>
+                <span>Сообщений: 2 780</span>
+              </div>
+            </div>
+            <div className="forum-node">
+              <div className="node-main">
+                <Link href="/subtopic/3-2" className="node-title">
+                  3.2 Учебные клинические задачи
+                </Link>
+                <p className="node-desc">
+                  Ситуационные задачи и принятие решений
+                </p>
+              </div>
+              <div className="node-stats">
+                <span>Тем: 64</span>
+                <span>Сообщений: 520</span>
+              </div>
+            </div>
+            <div className="forum-node">
+              <div className="node-main">
+                <Link href="/subtopic/3-3" className="node-title">
+                  3.3 Ошибки и разборы
+                </Link>
+                <p className="node-desc">
+                  Диагностические и тактические ошибки, альтернативные решения
+                </p>
+              </div>
+              <div className="node-stats">
+                <span>Тем: 58</span>
+                <span>Сообщений: 690</span>
+              </div>
+            </div>
+          </section>
+
+          {/* CATEGORY 4 */}
+          <section className="forum-category">
+            <h2>4. Тематические конспекты и карьера</h2>
+            <div className="forum-node">
+              <div className="node-main">
+                <Link href="/subtopic/4-1" className="node-title">
+                  Советы от старших курсов
+                </Link>
+                <p className="node-desc">
+                  Конспекты, лайфхаки, рекомендации по обучению
+                </p>
+              </div>
+              <div className="node-stats">
+                <span>Тем: 41</span>
+                <span>Сообщений: 360</span>
+              </div>
+            </div>
+            <div className="forum-node">
+              <div className="node-main">
+                <Link href="/subtopic/4-3" className="node-title">
+                  4.3 Карьера в медицине
+                </Link>
+                <p className="node-desc">
+                  Специальности, резидентура, работа в больнице
+                </p>
+              </div>
+              <div className="node-stats">
+                <span>Тем: 72</span>
+                <span>Сообщений: 890</span>
+              </div>
+            </div>
+          </section>
+
+          {/* CATEGORY 5 */}
+          <section className="forum-category">
+            <h2>5. Свободные темы</h2>
+            <div className="forum-node">
+              <div className="node-main">
+                <Link href="/subtopic/5-1" className="node-title">
+                  Свободное общение
+                </Link>
+                <p className="node-desc">
+                  Медицинские новости, исследования, технологии, разговоры вне
+                  медицины
+                </p>
+              </div>
+              <div className="node-stats">
+                <span>Тем: 190</span>
+                <span>Сообщений: 4 560</span>
+              </div>
+            </div>
+          </section>
+        </main>
+
+        <footer className="footer">
+          <div className="container">
+            <span>© Arizona RP</span>
+            <nav>
+              <Link href="#">Контакты</Link>
+              <Link href="#">Правила</Link>
+              <Link href="#">Помощь</Link>
+            </nav>
+          </div>
+        </footer>
+      </div>
+    </>
   );
 }
