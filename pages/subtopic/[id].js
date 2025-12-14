@@ -1,14 +1,13 @@
 // pages/subtopic/[id].js
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import '/css/subtopic.css'; // если файл в public/css
 import Link from 'next/link';
+import Head from 'next/head';
 
 export default function Subtopic() {
   const router = useRouter();
   const { id } = router.query;
 
-  // Пример "базы данных" сообщений для разных подфорумов
   const initialMessagesData = {
     '1-1': [
       { user: 'Alice', text: 'Привет! Как сдать экзамен по анатомии?', date: '2025-12-14 10:23' },
@@ -21,30 +20,31 @@ export default function Subtopic() {
   };
 
   const [messages, setMessages] = useState([]);
+  const [newMessage, setNewMessage] = useState('');
 
-  // Загружаем сообщения при смене subtopic
   useEffect(() => {
     if (!id) return;
     setMessages(initialMessagesData[id] || []);
   }, [id]);
 
-  const [newMessage, setNewMessage] = useState('');
-
   const handleSend = () => {
     if (!newMessage.trim()) return;
-
     const message = {
       user: 'Вы',
       text: newMessage.trim(),
       date: new Date().toLocaleString('ru-RU', { hour12: false }),
     };
-
     setMessages([...messages, message]);
     setNewMessage('');
   };
 
   return (
     <div className="theme-dark">
+      <Head>
+        <title>Subtopic — {id}</title>
+        <link rel="stylesheet" href="/css/subtopic.css" />
+      </Head>
+
       <header className="topbar">
         <div className="container">
           <div className="logo">Arizona RP</div>
