@@ -1,8 +1,9 @@
-/* ===== BASE (совпадает с форумом) ===== */
+/* === PAGE === */
 .profile {
     margin-top: 24px;
 }
 
+/* === PANELS (как на форуме) === */
 .panel {
     background: var(--panel);
     border: 1px solid var(--border);
@@ -10,12 +11,7 @@
     padding: 16px;
 }
 
-.muted {
-    color: var(--muted);
-    font-size: 14px;
-}
-
-/* ===== IDENTITY ===== */
+/* === IDENTITY STRIP === */
 .profile-identity {
     display: flex;
     align-items: center;
@@ -23,6 +19,7 @@
     margin-bottom: 24px;
 }
 
+/* AVATAR */
 .profile-avatar {
     width: 56px;
     height: 56px;
@@ -31,29 +28,36 @@
     background: #000;
 }
 
+/* USER META */
 .profile-user {
     flex: 1;
+    min-width: 0;
 }
 
 .profile-name {
-    font-size: 18px;
+    font-size: 17px;
     font-weight: 600;
+    color: var(--text);
+    line-height: 1.2;
 }
 
 .profile-email {
-    font-size: 14px;
+    font-size: 13px;
     color: var(--muted);
+    margin-top: 2px;
 }
 
+/* ROLE / BADGE */
 .profile-role {
-    font-size: 13px;
+    font-size: 12px;
     padding: 4px 8px;
     border-radius: 4px;
-    background: #0f766e; /* тёмный бирюзовый */
+    background: #1f7a73; /* твой тёмный бирюзовый */
     color: #d0f8f5;
+    white-space: nowrap;
 }
 
-/* ===== GRID ===== */
+/* === GRID === */
 .profile-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -61,7 +65,15 @@
     margin-bottom: 16px;
 }
 
-/* ===== STATS ===== */
+/* === PANEL TITLES === */
+.panel h3 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+/* === STATS === */
 .profile-stats {
     list-style: none;
     padding: 0;
@@ -73,13 +85,31 @@
     justify-content: space-between;
     padding: 6px 0;
     border-bottom: 1px solid var(--border);
-    font-size: 14px;
+    font-size: 13px;
+    color: var(--text);
 }
 
 .profile-stats li:last-child {
     border-bottom: none;
 }
 
-.profile-stats strong {
-    color: var(--text);
+/* === MUTED TEXT === */
+.muted {
+    font-size: 13px;
+    color: var(--muted);
+}
+
+/* === RESPONSIVE (минимум) === */
+@media (max-width: 768px) {
+    .profile-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-identity {
+        flex-wrap: wrap;
+    }
+
+    .profile-role {
+        margin-top: 8px;
+    }
 }
