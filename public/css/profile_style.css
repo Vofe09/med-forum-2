@@ -1,0 +1,86 @@
+/* ===== PAGE ===== */
+.profile-page {
+    min-height: 100vh;
+    background: radial-gradient(circle at top, #1a1a1a, #0b0b0b);
+    color: #aaa;
+    font-family: Arial, sans-serif;
+}
+
+/* ===== HEADER ===== */
+.profile-header {
+    height: 60px;
+    margin: 20px;
+    border: 1px solid #555;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    color: #777;
+}
+
+/* ===== PROFILE CARD ===== */
+.profile-card {
+    width: 720px;
+    margin: 40px auto;
+    border: 2px solid #666;
+    border-radius: 20px;
+    padding: 30px;
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    background: rgba(0, 0, 0, 0.45);
+}
+
+/* ===== AVATAR ===== */
+.profile-avatar {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    border: 3px solid #666;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+    font-size: 14px;
+}
+
+/* ===== INFO ===== */
+.profile-info h2 {
+    margin: 0;
+    font-size: 18px;
+    letter-spacing: 1px;
+}
+
+.profile-info p {
+    margin-top: 6px;
+    font-size: 14px;
+    color: #777;
+}
+
+/* ===== POINTS ===== */
+.profile-points {
+    margin-left: auto;
+    text-align: center;
+    color: #777;
+}
+
+.profile-points strong {
+    display: block;
+    font-size: 22px;
+    margin-top: 6px;
+    color: #aaa;
+}
+
+/* ===== COMMENTS ===== */
+.profile-comments {
+    width: 720px;
+    height: 150px;
+    margin: 0 auto;
+    border: 2px solid #666;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+    background: rgba(0, 0, 0, 0.3);
+}
