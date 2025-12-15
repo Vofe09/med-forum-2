@@ -1,3 +1,4 @@
+import Head from "next/head";
 import { useState } from "react";
 import { useRouter } from "next/router";
 
@@ -36,27 +37,41 @@ export default function Login() {
     };
 
     return (
-        <div style={{ padding: 40 }}>
-            <h1>Вход</h1>
+        <>
+            <Head>
+                <link rel="stylesheet" href="/css/auth.css" />
+            </Head>
 
-            {error && <p style={{ color: "red" }}>{error}</p>}
+            <div className="auth-page">
+                <div className="auth-card">
+                    <h1>Вход</h1>
 
-            <form onSubmit={submit}>
-                <input
-                    placeholder="Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                />
-                <br /><br />
-                <input
-                    type="password"
-                    placeholder="Пароль"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                />
-                <br /><br />
-                <button type="submit">Войти</button>
-            </form>
-        </div>
+                    {error && <div className="auth-error">{error}</div>}
+
+                    <form className="auth-form" onSubmit={submit}>
+                        <input
+                            placeholder="Email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
+
+                        <input
+                            type="password"
+                            placeholder="Пароль"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
+
+                        <button type="submit" className="auth-button">
+                            Войти
+                        </button>
+                    </form>
+
+                    <div className="auth-footer">
+                        Нет аккаунта? <a href="/register">Регистрация</a>
+                    </div>
+                </div>
+            </div>
+        </>
     );
 }

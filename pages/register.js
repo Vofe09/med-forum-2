@@ -1,19 +1,17 @@
+import Head from "next/head";
 import { useState } from "react";
 import { useRouter } from "next/router";
 
 export default function Register() {
     const router = useRouter();
-
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
-    const [success, setSuccess] = useState("");
 
     const submit = async (e) => {
         e.preventDefault();
         setError("");
-        setSuccess("");
 
         const res = await fetch("/api/auth", {
             method: "POST",
@@ -33,41 +31,51 @@ export default function Register() {
             return;
         }
 
-        setSuccess("Регистрация успешна");
-        setTimeout(() => {
-            router.push("/login");
-        }, 1000);
+        router.push("/login");
     };
 
     return (
-        <div style={{ padding: 40 }}>
-            <h1>Регистрация</h1>
+        <>
+            <Head>
+                <link rel="stylesheet" href="/css/auth.css" />
+            </Head>
 
-            {error && <p style={{ color: "red" }}>{error}</p>}
-            {success && <p style={{ color: "green" }}>{success}</p>}
+            <div className="auth-page">
+                <div className="auth-card">
+                    <h1>Регистрация</h1>
 
-            <form onSubmit={submit}>
-                <input
-                    placeholder="Имя пользователя"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                />
-                <br /><br />
-                <input
-                    placeholder="Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                />
-                <br /><br />
-                <input
-                    type="password"
-                    placeholder="Пароль"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                />
-                <br /><br />
-                <button type="submit">Зарегистрироваться</button>
-            </form>
-        </div>
+                    {error && <div className="auth-error">{error}</div>}
+
+                    <form className="auth-form" onSubmit={submit}>
+                        <input
+                            placeholder="Логин"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                        />
+
+                        <input
+                            placeholder="Email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
+
+                        <input
+                            type="password"
+                            placeholder="Пароль"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
+
+                        <button type="submit" className="auth-button">
+                            Создать аккаунт
+                        </button>
+                    </form>
+
+                    <div className="auth-footer">
+                        Уже есть аккаунт? <a href="/login">Войти</a>
+                    </div>
+                </div>
+            </div>
+        </>
     );
 }

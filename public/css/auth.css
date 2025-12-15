@@ -1,0 +1,123 @@
+/* ===== AUTH PAGE BACKGROUND ===== */
+.auth-page {
+    min-height: 100vh;
+    background: rgba(0, 0, 0, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Inter, sans-serif;
+}
+
+/* ===== AUTH CARD ===== */
+.auth-card {
+    width: 100%;
+    max-width: 420px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    padding: 32px 28px;
+
+    box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+    animation: authAppear 0.6s ease forwards;
+}
+
+/* ===== TITLE ===== */
+.auth-card h1 {
+    text-align: center;
+    font-size: 24px;
+    font-weight: 600;
+    color: #1f7a73;
+    margin-bottom: 24px;
+}
+
+/* ===== FORM ===== */
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+/* INPUTS */
+.auth-form input {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 10px;
+
+    border: 1px solid #4fd1c5;
+    font-size: 15px;
+
+    outline: none;
+    transition: border 0.2s ease, box-shadow 0.2s ease;
+}
+
+.auth-form input::placeholder {
+    color: #7a7a7a;
+}
+
+.auth-form input:focus {
+    border-color: #34d399;
+    box-shadow: 0 0 0 2px rgba(52, 211, 153, 0.25);
+}
+
+/* ===== MAIN BUTTON ===== */
+.auth-button {
+    margin-top: 10px;
+    padding: 12px;
+    border-radius: 12px;
+
+    border: none;
+    background: linear-gradient(135deg, #4fd1c5, #34d399);
+    color: #ffffff;
+
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.auth-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(52, 211, 153, 0.35);
+}
+
+/* ===== LINKS / SECONDARY ===== */
+.auth-footer {
+    margin-top: 18px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.auth-footer a {
+    color: #1f7a73;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.auth-footer a:hover {
+    text-decoration: underline;
+}
+
+/* ===== ERROR / SUCCESS ===== */
+.auth-error {
+    color: #dc2626;
+    font-size: 14px;
+    text-align: center;
+}
+
+.auth-success {
+    color: #059669;
+    font-size: 14px;
+    text-align: center;
+}
+
+/* ===== ANIMATION ===== */
+@keyframes authAppear {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
