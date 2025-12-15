@@ -109,3 +109,11 @@
         grid-template-columns: 1fr;
     }
 }
+
+/* === FORCE PROFILE CARD STYLE === */
+.profile-card {
+    background-color: var(--panel) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 6px;
+    padding: 20px;
+}
