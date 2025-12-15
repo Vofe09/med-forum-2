@@ -23,11 +23,6 @@ export default function Profile() {
         }
     }, []);
 
-    const logout = () => {
-        document.cookie = "user=; Max-Age=0; path=/";
-        router.push("/login");
-    };
-
     if (!user) return null;
 
     return (
@@ -36,27 +31,32 @@ export default function Profile() {
                 <link rel="stylesheet" href="/css/profile_style.css" />
             </Head>
 
-            <div className="profile-page">
-                <header className="profile-header">
-                    <span>header</span>
-                    <button onClick={logout}>logout</button>
-                </header>
+            <div className="container profile-page">
+                {/* PROFILE PANEL */}
+                <div className="profile-panel">
+                    <div className="profile-main">
+                        <img
+                            className="profile-avatar"
+                            src={user.avatar || "/avatar-placeholder.png"}
+                            alt="avatar"
+                        />
 
-                <div className="profile-card">
-                    <div className="profile-avatar">avatar</div>
+                        <div className="profile-meta">
+                            <h1>{user.username}</h1>
+                            <span>{user.email}</span>
+                        </div>
 
-                    <div className="profile-info">
-                        <h2>{user.username}</h2>
-                        <p>{user.email}</p>
-                    </div>
-
-                    <div className="profile-points">
-                        <span>AMOUNT POINTS</span>
-                        <strong>0</strong>
+                        <div className="profile-stats">
+                            <div>
+                                <strong>0</strong>
+                                <span>Points</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div className="profile-comments">
+                {/* FUTURE CONTENT */}
+                <div className="profile-panel muted">
                     comments (in future)
                 </div>
             </div>

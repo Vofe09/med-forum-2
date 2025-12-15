@@ -1,3 +1,4 @@
+/* Используем ТВОЮ палитру */
 :root {
     --bg-light: #e6f8f7;
     --blue-main: #4fd1c5;
@@ -8,123 +9,75 @@
 
     --text-dark: #1e293b;
     --green-accent: #34d399;
-    --warning-accent: #facc15;
 }
 
 /* ===== PAGE ===== */
 .profile-page {
-    min-height: 100vh;
-    background: var(--bg-light);
-    color: var(--text-dark);
-    font-family: Inter, sans-serif;
+    margin-top: 32px;
 }
 
-/* ===== HEADER ===== */
-.profile-header {
-    height: 56px;
-    margin: 16px;
+/* ===== PANELS ===== */
+.profile-panel {
     background: var(--soft-blue);
     border: 1px solid var(--blue-dark);
     border-radius: 6px;
+    padding: 20px;
+    margin-bottom: 24px;
+}
 
+.profile-panel.muted {
+    color: var(--blue-dark);
+    text-align: center;
+}
+
+/* ===== MAIN INFO ===== */
+.profile-main {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 0 20px;
-}
-
-.profile-header button {
-    background: var(--blue-main);
-    border: none;
-    color: var(--text-dark);
-    padding: 6px 12px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 500;
-}
-
-.profile-header button:hover {
-    background: var(--blue-hover);
-}
-
-/* ===== PROFILE CARD ===== */
-.profile-card {
-    max-width: 900px;
-    margin: 32px auto;
-    padding: 24px;
-
-    background: var(--soft-blue);
-    border: 1px solid var(--blue-dark);
-    border-radius: 8px;
-
-    display: flex;
-    align-items: center;
-    gap: 24px;
+    gap: 20px;
 }
 
 /* ===== AVATAR ===== */
 .profile-avatar {
-    width: 120px;
-    height: 120px;
+    width: 96px;
+    height: 96px;
     border-radius: 50%;
-    background: var(--bg-light);
+    object-fit: cover;
     border: 2px solid var(--blue-main);
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    color: var(--blue-dark);
-    font-size: 13px;
+    background: var(--bg-light);
 }
 
-/* ===== INFO ===== */
-.profile-info h2 {
+/* ===== META ===== */
+.profile-meta h1 {
     margin: 0;
-    font-size: 18px;
+    font-size: 20px;
     font-weight: 600;
 }
 
-.profile-info p {
-    margin-top: 6px;
+.profile-meta span {
+    display: block;
+    margin-top: 4px;
     font-size: 14px;
     color: var(--blue-dark);
 }
 
-/* ===== POINTS ===== */
-.profile-points {
+/* ===== STATS ===== */
+.profile-stats {
     margin-left: auto;
-    text-align: right;
 }
 
-.profile-points span {
-    font-size: 12px;
-    color: var(--blue-dark);
-    letter-spacing: 0.04em;
+.profile-stats div {
+    text-align: center;
 }
 
-.profile-points strong {
+.profile-stats strong {
     display: block;
-    margin-top: 4px;
-    font-size: 24px;
+    font-size: 22px;
     font-weight: 600;
     color: var(--green-accent);
 }
 
-/* ===== COMMENTS ===== */
-.profile-comments {
-    max-width: 900px;
-    height: 140px;
-    margin: 0 auto;
-
-    background: var(--soft-blue);
-    border: 1px solid var(--blue-dark);
-    border-radius: 8px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
+.profile-stats span {
+    font-size: 12px;
     color: var(--blue-dark);
-    font-size: 14px;
 }
