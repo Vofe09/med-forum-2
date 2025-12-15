@@ -23,6 +23,11 @@ export default function Profile() {
         }
     }, []);
 
+    const logout = () => {
+        document.cookie = "user=; Max-Age=0; path=/";
+        router.push("/login");
+    };
+
     if (!user) return null;
 
     return (
@@ -32,16 +37,28 @@ export default function Profile() {
             </Head>
 
             <div className="profile-hero">
-                {/* PROFILE CARD */}
                 <div className="profile-card">
+                    {/* ACTIONS */}
+                    <div className="profile-actions">
+                        <button onClick={() => router.push("/")}>
+                            Forum
+                        </button>
+                        <button className="logout" onClick={logout}>
+                            Log out
+                        </button>
+                    </div>
+
+                    {/* AVATAR */}
                     <img
                         src={user.avatar || "/avatar-placeholder.png"}
                         alt="avatar"
                     />
 
+                    {/* INFO */}
                     <h1>{user.username}</h1>
                     <p>{user.email}</p>
 
+                    {/* STATS */}
                     <div className="profile-stats">
                         <div>
                             <strong>0</strong>
