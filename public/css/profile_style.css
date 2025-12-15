@@ -1,95 +1,53 @@
-/* ===== PAGE BACKGROUND ===== */
+/* ===== PROFILE HERO ===== */
 .profile-hero {
-    min-height: 100vh;
-    background: rgb(24, 24, 24);
+    margin-top: 100px;
     display: flex;
     justify-content: center;
-    align-items: flex-start;
-    padding-top: 100px;
+    padding: 40px 0;
 }
 
-/* ===== PROFILE CARD ===== */
+/* ===== PROFILE CARD (GLASS) ===== */
 .profile-card {
-    position: relative;
-
-    width: 60%;
-    max-width: 720px;
-
-    background: rgba(28, 28, 28, 0.85);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-
-    padding: 32px;
-
-    box-shadow: 0 12px 32px rgba(0,0,0,0.5);
-    backdrop-filter: blur(12px);
-
     display: flex;
     flex-direction: column;
     align-items: center;
+
+    width: 60%;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    padding: 30px;
+
+    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+    backdrop-filter: blur(12px);
 
     opacity: 0;
     transform: translateY(20px);
     animation: profileAppear 1.2s forwards;
 }
 
-/* ===== ACTION BUTTONS ===== */
-.profile-actions {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    display: flex;
-    gap: 10px;
-}
-
-.profile-actions button {
-    background: transparent;
-    border: 1px solid var(--border);
-    color: var(--text);
-    padding: 6px 12px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 13px;
-}
-
-.profile-actions button:hover {
-    background: var(--panel);
-}
-
-.profile-actions .logout {
-    border-color: #7c2d2d;
-    color: #fca5a5;
-}
-
-.profile-actions .logout:hover {
-    background: rgba(124,45,45,0.2);
-}
-
-/* ===== AVATAR ===== */
+/* AVATAR */
 .profile-card img {
     width: 120px;
     height: 120px;
     border-radius: 50%;
     object-fit: cover;
     margin-bottom: 20px;
-    background: #000;
 }
 
-/* ===== TEXT ===== */
+/* TEXT */
 .profile-card h1 {
-    margin: 0;
     font-size: 26px;
-    font-weight: 600;
     color: var(--text);
+    margin: 0;
 }
 
 .profile-card p {
-    margin-top: 6px;
-    font-size: 15px;
+    font-size: 16px;
     color: var(--muted);
+    margin-top: 6px;
 }
 
-/* ===== STATS ===== */
+/* STATS */
 .profile-stats {
     display: flex;
     gap: 40px;
@@ -111,7 +69,7 @@
     color: var(--muted);
 }
 
-/* ===== ANIMATION ===== */
+/* ANIMATION */
 @keyframes profileAppear {
     to {
         opacity: 1;
@@ -119,13 +77,44 @@
     }
 }
 
-/* ===== RESPONSIVE ===== */
-@media (max-width: 768px) {
-    .profile-card {
-        width: 90%;
-    }
-
-    .profile-stats {
-        gap: 24px;
-    }
+/* ===== PROFILE ACTIONS ===== */
+.profile-actions {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    gap: 12px;
 }
+
+/* COMMON BUTTON */
+.profile-actions button {
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    color: var(--text);
+
+    padding: 6px 14px;
+    border-radius: 10px;
+
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+
+    backdrop-filter: blur(6px);
+    transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.profile-actions button:hover {
+    background: rgba(255, 255, 255, 0.18);
+    transform: translateY(-1px);
+}
+
+/* LOGOUT VARIANT */
+.profile-actions .logout {
+    border-color: rgba(255, 100, 100, 0.4);
+    color: #ffb3b3;
+}
+
+.profile-actions .logout:hover {
+    background: rgba(255, 100, 100, 0.15);
+}
+
