@@ -1,25 +1,32 @@
-/* === PAGE === */
+/* === PROFILE PAGE === */
 .profile {
     margin-top: 24px;
 }
 
-/* === PANELS (как на форуме) === */
-.panel {
+/* === MAIN CARD (как forum panels) === */
+.profile-card {
     background: var(--panel);
     border: 1px solid var(--border);
     border-radius: 6px;
-    padding: 16px;
+    padding: 20px;
 }
 
-/* === IDENTITY STRIP === */
+/* === SECTIONS INSIDE CARD === */
+.profile-section {
+    margin-bottom: 24px;
+}
+
+.profile-section:last-child {
+    margin-bottom: 0;
+}
+
+/* === IDENTITY === */
 .profile-identity {
     display: flex;
     align-items: center;
     gap: 16px;
-    margin-bottom: 24px;
 }
 
-/* AVATAR */
 .profile-avatar {
     width: 56px;
     height: 56px;
@@ -28,17 +35,14 @@
     background: #000;
 }
 
-/* USER META */
 .profile-user {
     flex: 1;
-    min-width: 0;
 }
 
 .profile-name {
     font-size: 17px;
     font-weight: 600;
     color: var(--text);
-    line-height: 1.2;
 }
 
 .profile-email {
@@ -47,27 +51,24 @@
     margin-top: 2px;
 }
 
-/* ROLE / BADGE */
 .profile-role {
     font-size: 12px;
     padding: 4px 8px;
     border-radius: 4px;
-    background: #1f7a73; /* твой тёмный бирюзовый */
+    background: #1f7a73;
     color: #d0f8f5;
-    white-space: nowrap;
 }
 
 /* === GRID === */
 .profile-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    margin-bottom: 16px;
+    gap: 24px;
 }
 
-/* === PANEL TITLES === */
-.panel h3 {
-    margin: 0;
+/* === TITLES === */
+.profile-card h3 {
+    margin: 0 0 12px;
     font-size: 14px;
     font-weight: 600;
     color: var(--text);
@@ -77,7 +78,7 @@
 .profile-stats {
     list-style: none;
     padding: 0;
-    margin: 12px 0 0;
+    margin: 0;
 }
 
 .profile-stats li {
@@ -86,11 +87,14 @@
     padding: 6px 0;
     border-bottom: 1px solid var(--border);
     font-size: 13px;
-    color: var(--text);
 }
 
 .profile-stats li:last-child {
     border-bottom: none;
+}
+
+.profile-stats strong {
+    color: var(--text);
 }
 
 /* === MUTED TEXT === */
@@ -99,17 +103,9 @@
     color: var(--muted);
 }
 
-/* === RESPONSIVE (минимум) === */
+/* === RESPONSIVE === */
 @media (max-width: 768px) {
     .profile-grid {
         grid-template-columns: 1fr;
-    }
-
-    .profile-identity {
-        flex-wrap: wrap;
-    }
-
-    .profile-role {
-        margin-top: 8px;
     }
 }
