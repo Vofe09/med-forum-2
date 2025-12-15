@@ -1,83 +1,85 @@
-/* Используем ТВОЮ палитру */
-:root {
-    --bg-light: #e6f8f7;
-    --blue-main: #4fd1c5;
-    --blue-light: #76e0d1;
-    --blue-hover: #a0f0ea;
-    --blue-dark: #1f7a73;
-    --soft-blue: #d0f8f5;
-
-    --text-dark: #1e293b;
-    --green-accent: #34d399;
+/* ===== BASE (совпадает с форумом) ===== */
+.profile {
+    margin-top: 24px;
 }
 
-/* ===== PAGE ===== */
-.profile-page {
-    margin-top: 32px;
-}
-
-/* ===== PANELS ===== */
-.profile-panel {
-    background: var(--soft-blue);
-    border: 1px solid var(--blue-dark);
+.panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
     border-radius: 6px;
-    padding: 20px;
+    padding: 16px;
+}
+
+.muted {
+    color: var(--muted);
+    font-size: 14px;
+}
+
+/* ===== IDENTITY ===== */
+.profile-identity {
+    display: flex;
+    align-items: center;
+    gap: 16px;
     margin-bottom: 24px;
 }
 
-.profile-panel.muted {
-    color: var(--blue-dark);
-    text-align: center;
-}
-
-/* ===== MAIN INFO ===== */
-.profile-main {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-}
-
-/* ===== AVATAR ===== */
 .profile-avatar {
-    width: 96px;
-    height: 96px;
+    width: 56px;
+    height: 56px;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid var(--blue-main);
-    background: var(--bg-light);
+    background: #000;
 }
 
-/* ===== META ===== */
-.profile-meta h1 {
-    margin: 0;
-    font-size: 20px;
+.profile-user {
+    flex: 1;
+}
+
+.profile-name {
+    font-size: 18px;
     font-weight: 600;
 }
 
-.profile-meta span {
-    display: block;
-    margin-top: 4px;
+.profile-email {
     font-size: 14px;
-    color: var(--blue-dark);
+    color: var(--muted);
+}
+
+.profile-role {
+    font-size: 13px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    background: #0f766e; /* тёмный бирюзовый */
+    color: #d0f8f5;
+}
+
+/* ===== GRID ===== */
+.profile-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
 }
 
 /* ===== STATS ===== */
 .profile-stats {
-    margin-left: auto;
+    list-style: none;
+    padding: 0;
+    margin: 12px 0 0;
 }
 
-.profile-stats div {
-    text-align: center;
+.profile-stats li {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+}
+
+.profile-stats li:last-child {
+    border-bottom: none;
 }
 
 .profile-stats strong {
-    display: block;
-    font-size: 22px;
-    font-weight: 600;
-    color: var(--green-accent);
-}
-
-.profile-stats span {
-    font-size: 12px;
-    color: var(--blue-dark);
+    color: var(--text);
 }
