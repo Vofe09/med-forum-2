@@ -37,30 +37,14 @@ export default function Login() {
         return;
       }
 
-      // Проверим /api/me чтобы убедиться, что cookie/sid применился
-      try {
-        const meRes = await fetch("/api/me", { credentials: "include" });
-        if (!meRes.ok) {
-          // сессия не установлена — показать ошибку
-          const errBody = await meRes.json().catch(() => ({}));
-          setError(errBody.error || "Не удалось подтвердить сессию");
-          setLoading(false);
-          return;
-        }
-      } catch (err) {
-        console.error("ME CHECK ERROR:", err);
-        setError("Ошибка проверки сессии");
-        setLoading(false);
-        return;
-      }
-
-      // Всё ок — редиректим
-      router.push("/profile");
+      // ✅ ВАЖНО:
+      // не дергаем /api/me здесь
+      // делаем жёсткий редирект, чтобы браузер гарантированно применил cookie
+      window.location.href = "/profile";
 
     } catch (err) {
       console.error("LOGIN ERROR:", err);
       setError("Ошибка сервера");
-    } finally {
       setLoading(false);
     }
   };
