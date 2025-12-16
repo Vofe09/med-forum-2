@@ -2,6 +2,7 @@
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import { getRankByReputation } from "../utils/ranks";
 
 export default function Profile() {
   const router = useRouter();
@@ -15,27 +16,34 @@ export default function Profile() {
       try {
         const res = await fetch("/api/me", {
           credentials: "include",
-          cache: "no-store"
+          cache: "no-store",
         });
+
         if (!res.ok) {
           router.push("/login");
           return;
         }
+
         const data = await res.json();
         if (mounted) setUser(data);
-      } catch {
+      } catch (err) {
         router.push("/login");
       } finally {
         if (mounted) setLoading(false);
       }
     })();
 
-    return () => (mounted = false);
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   const logout = async () => {
     try {
-      await fetch("/api/logout", { method: "POST", credentials: "include" });
+      await fetch("/api/logout", {
+        method: "POST",
+        credentials: "include",
+      });
     } finally {
       router.push("/login");
     }
@@ -43,9 +51,22 @@ export default function Profile() {
 
   if (loading || !user) return null;
 
+  /* ======================
+     RANK LOGIC
+     ====================== */
   const reputation = user.reputation ?? 0;
-  const levelMax = 500;
-  const progress = Math.min((reputation / levelMax) * 100, 100);
+  const rank = getRankByReputation(reputation);
+
+  const rankMin = rank.min;
+  const rankMax = rank.max;
+
+  const progress =
+    rankMax === Infinity
+      ? 100
+      : Math.min(
+          ((reputation - rankMin) / (rankMax - rankMin)) * 100,
+          100
+        );
 
   return (
     <>
@@ -58,7 +79,7 @@ export default function Profile() {
 
           {/* ACTIONS */}
           <div className="profile-actions">
-            <button onClick={() => router.push("/")}>Forum</button>
+            <button onClick={() => router.push("/forum")}>Forum</button>
             <button className="logout" onClick={logout}>Log out</button>
           </div>
 
@@ -75,6 +96,18 @@ export default function Profile() {
             <span className="badge">Статус: Студент медколледжа</span>
             <span className="badge">Год обучения / опыт: 7 лет</span>
             <span className="badge">Направление: Сестринское дело</span>
+
+            {/* RANK BADGE */}
+            <span
+              className="badge"
+              style={{
+                background: rank.color,
+                color: "#fff",
+                fontWeight: 600,
+              }}
+            >
+              Ранг: {rank.name}
+            </span>
           </div>
 
           {/* SCORE */}
@@ -83,16 +116,24 @@ export default function Profile() {
 
             <div className="profile-level">
               <img src="/medic-icon.png" alt="" />
+
               <div>
-                <div className="level-title">Уровень: интересующийся медик</div>
+                <div className="level-title">
+                  Уровень:{" "}
+                  <span style={{ color: rank.color, fontWeight: 700 }}>
+                    {rank.name}
+                  </span>
+                </div>
+
                 <div className="progress-bar">
                   <div
                     className="progress-fill"
                     style={{ width: `${progress}%` }}
                   />
                 </div>
+
                 <div className="progress-text">
-                  {reputation}/{levelMax}
+                  {reputation} / {rankMax === Infinity ? "∞" : rankMax}
                 </div>
               </div>
             </div>
@@ -103,10 +144,11 @@ export default function Profile() {
             <h2>Быстрая статистика</h2>
 
             <div className="quick-list">
-              <div className="quick-item">📘 Материалов в избранном: 5</div>
               <div className="quick-item">✅ Пройдено тем: 23</div>
-              <div className="quick-item">⭐ Добавлено пользователем: 2</div>
-              <div className="quick-item">➕ Создано тем на форуме: {user.posts_count ?? 0}</div>
+              <div className="quick-item">⭐ Добавлено пользователем: 0</div>
+              <div className="quick-item">
+                ➕ Создано тем на форуме: {user.posts_count ?? 0}
+              </div>
             </div>
           </div>
 
