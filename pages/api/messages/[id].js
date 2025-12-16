@@ -62,10 +62,15 @@ export default async function handler(req, res) {
 
       await conn.commit();
       res.status(201).json({ success: true });
-    } catch (err) {
-      await conn.rollback();
-      console.error(err);
-      res.status(500).json({ error: "Ошибка сервера" });
+    }  catch (err) {
+  await conn.rollback();
+  console.error("MESSAGES API ERROR:", err);
+  return res.status(500).json({
+    error: err.message,
+    code: err.code
+  })
+
+
       
     } finally {
       conn.release();
