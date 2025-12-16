@@ -18,6 +18,17 @@ export default async function handler(req, res) {
     return res.status(200).json(rows);
   }
 
+
+  console.log("DB NAME:", process.env.DB_NAME);
+    console.log("USER ID FROM COOKIE:", user.id);
+
+    const [check] = await pool.query(
+    "SELECT id FROM users WHERE id = ?",
+    [user.id]
+    );
+
+    console.log("USER EXISTS:", check);
+
   // ===== POST =====
   if (req.method === "POST") {
     // 🔒 проверка авторизации
