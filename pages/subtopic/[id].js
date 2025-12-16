@@ -221,7 +221,7 @@ export default function Subtopic() {
 
       <footer className="footer">
         <div className="container">
-          <span>© Arizona RP</span>
+          <span>MED - UNIT</span>
           <nav>
             <Link href="#">Контакты</Link>
             <Link href="#">Правила</Link>

@@ -28,11 +28,11 @@ export default function Home() {
       <div className="theme-dark">
         <header className="topbar">
           <div className="container">
-            <div className="logo">Arizona RP</div>
+            <div className="logo">MED - UNIT</div>
             <nav className="nav">
               <Link href="#">Форумы</Link>
               <Link href="#">Помощь</Link>
-              <Link href="#">Профиль</Link>
+              <Link href="/profile">Профиль</Link>
             </nav>
           </div>
         </header>
@@ -266,7 +266,7 @@ export default function Home() {
 
         <footer className="footer">
           <div className="container">
-            <span>© Arizona RP</span>
+            <span>MED - UNIT</span>
             <nav>
               <Link href="#">Контакты</Link>
               <Link href="#">Правила</Link>
