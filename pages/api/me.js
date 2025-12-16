@@ -35,16 +35,21 @@ export default async function handler(req, res) {
      POST — отправка сообщения
      ========================= */
   if (req.method === "POST") {
-    // 🔐 читаем sid из cookie
+    // 🔒 проверка авторизации
     const cookie = req.headers.cookie
       ?.split("; ")
-      .find(c => c.startsWith("sid="));
+      .find(c => c.startsWith("user="));
 
     if (!cookie) {
       return res.status(401).json({ error: "Необходимо войти в аккаунт" });
     }
 
-    const sid = cookie.split("=")[1];
+    let user;
+    try {
+      user = JSON.parse(decodeURIComponent(cookie.split("=")[1]));
+    } catch {
+      return res.status(401).json({ error: "Неверная сессия" });
+    }
 
     const { text } = req.body;
     if (!text || !text.trim()) {
@@ -54,27 +59,25 @@ export default async function handler(req, res) {
     const conn = await pool.getConnection();
 
     try {
-      // 🔎 получаем user_id по session
-      const [sessionRows] = await conn.query(
-        "SELECT user_id FROM sessions WHERE id = ?",
-        [sid]
+      // 🔍 проверяем, что пользователь реально есть в БД
+      const [exists] = await conn.query(
+        "SELECT id FROM users WHERE id = ?",
+        [user.id]
       );
 
-      if (!sessionRows.length) {
-        return res.status(401).json({ error: "Сессия недействительна" });
+      if (!exists.length) {
+        return res.status(401).json({ error: "Пользователь не найден в базе" });
       }
-
-      const userId = sessionRows[0].user_id;
 
       await conn.beginTransaction();
 
-      // 1️⃣ добавляем сообщение
+      // 1️⃣ сообщение
       await conn.query(
         "INSERT INTO messages (subtopic_id, user_id, text) VALUES (?, ?, ?)",
-        [subtopicId, userId, text.trim()]
+        [subtopicId, user.id, text.trim()]
       );
 
-      // 2️⃣ обновляем счётчики пользователя
+      // 2️⃣ счётчики
       await conn.query(
         `
         UPDATE users
@@ -82,7 +85,7 @@ export default async function handler(req, res) {
             reputation  = reputation  + 10
         WHERE id = ?
         `,
-        [userId]
+        [user.id]
       );
 
       await conn.commit();
