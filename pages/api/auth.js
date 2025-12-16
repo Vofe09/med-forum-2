@@ -4,12 +4,15 @@ import bcrypt from "bcryptjs";
 import crypto from "crypto";
 
 export default async function handler(req, res) {
+  // ✅ CORS / preflight (ОБЯЗАТЕЛЬНО для Vercel)
   if (req.method === "OPTIONS") {
+    res.setHeader("Allow", "POST, OPTIONS");
     return res.status(200).end();
   }
 
+  // ❗ НЕ РОНЯЕМ GET ЖЁСТКО
   if (req.method !== "POST") {
-    return res.status(405).json({ message: "Метод не разрешён" });
+    return res.status(200).json({ ok: false });
   }
 
   const { type } = req.body;
