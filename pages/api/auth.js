@@ -9,7 +9,7 @@ export default async function handler(req, res) {
     const { type } = req.body;
 
     try {
-        // ===== Регистрация =====
+        // ===== РЕГИСТРАЦИЯ =====
         if (type === "register") {
             const { username, email, password } = req.body;
 
@@ -19,15 +19,30 @@ export default async function handler(req, res) {
 
             const hashed = await bcrypt.hash(password, 10);
 
-            await pool.execute(
+            await pool.query(
                 "INSERT INTO users (username, email, password) VALUES (?, ?, ?)",
                 [username, email, hashed]
             );
 
-            return res.status(200).json({ message: "Регистрация успешна" });
+            // 🔥 получаем РЕАЛЬНЫЙ id
+            const [rows] = await pool.query(
+                "SELECT id, username, email FROM users WHERE email = ? LIMIT 1",
+                [email]
+            );
+
+            const user = rows[0];
+
+            return res.status(200).json({
+                message: "Регистрация успешна",
+                user: {
+                    id: user.id.toString(),   // ✅ string
+                    username: user.username,
+                    email: user.email
+                }
+            });
         }
 
-        // ===== Логин =====
+        // ===== ЛОГИН =====
         if (type === "login") {
             const { email, password } = req.body;
 
@@ -35,7 +50,7 @@ export default async function handler(req, res) {
                 return res.status(400).json({ message: "Введите email и пароль" });
             }
 
-            const [rows] = await pool.execute(
+            const [rows] = await pool.query(
                 "SELECT id, username, email, password FROM users WHERE email = ? LIMIT 1",
                 [email]
             );
@@ -54,7 +69,7 @@ export default async function handler(req, res) {
             return res.status(200).json({
                 message: "Вход выполнен",
                 user: {
-                    id: user.id,
+                    id: user.id.toString(),   // ✅ string
                     username: user.username,
                     email: user.email
                 }
@@ -68,7 +83,7 @@ export default async function handler(req, res) {
             return res.status(400).json({ message: "Этот email уже используется" });
         }
 
-        console.error(err);
+        console.error("AUTH ERROR:", err);
         res.status(500).json({ message: "Ошибка сервера" });
     }
 }
