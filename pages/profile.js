@@ -13,40 +13,39 @@ export default function Profile() {
 
     (async () => {
       try {
-        const res = await fetch("/api/me", { credentials: "include" });
+        const res = await fetch("/api/me", {
+          credentials: "include",
+          cache: "no-store"
+        });
         if (!res.ok) {
-          // если не авторизован — редирект
           router.push("/login");
           return;
         }
         const data = await res.json();
         if (mounted) setUser(data);
-      } catch (err) {
-        console.error("PROFILE: /api/me error", err);
+      } catch {
         router.push("/login");
       } finally {
         if (mounted) setLoading(false);
       }
     })();
 
-    return () => {
-      mounted = false;
-    };
+    return () => (mounted = false);
   }, []);
 
   const logout = async () => {
     try {
       await fetch("/api/logout", { method: "POST", credentials: "include" });
-    } catch (err) {
-      console.error("LOGOUT ERROR:", err);
     } finally {
-      // на клиенте просто редиректим на логин; cookie удалится сервером
       router.push("/login");
     }
   };
 
-  if (loading) return null;
-  if (!user) return null;
+  if (loading || !user) return null;
+
+  const reputation = user.reputation ?? 0;
+  const levelMax = 500;
+  const progress = Math.min((reputation / levelMax) * 100, 100);
 
   return (
     <>
@@ -56,30 +55,61 @@ export default function Profile() {
 
       <div className="profile-hero">
         <div className="profile-card">
-          <div className="profile-actions" style={{ alignSelf: "flex-end" }}>
+
+          {/* ACTIONS */}
+          <div className="profile-actions">
             <button onClick={() => router.push("/")}>Forum</button>
             <button className="logout" onClick={logout}>Log out</button>
           </div>
 
-          <img src={user.avatar || "/avatar-placeholder.png"} alt="avatar" />
+          {/* HEADER */}
+          <img
+            src={user.avatar || "/avatar-placeholder.png"}
+            alt="avatar"
+            className="profile-avatar"
+          />
 
-          <h1>{user.username}</h1>
-          <p>{user.email}</p>
+          <h1 className="profile-name">{user.username}</h1>
 
-          <div className="profile-stats">
-            <div>
-              <strong>{user.posts_count ?? 0}</strong>
-              <span>Posts</span>
-            </div>
-            <div>
-              <strong>0</strong>
-              <span>Comments</span>
-            </div>
-            <div>
-              <strong>{user.reputation ?? 0}</strong>
-              <span>Reputation</span>
+          <div className="profile-badges">
+            <span className="badge">Статус: Студент медколледжа</span>
+            <span className="badge">Год обучения / опыт: 7 лет</span>
+            <span className="badge">Направление: Сестринское дело</span>
+          </div>
+
+          {/* SCORE */}
+          <div className="profile-score">
+            <h2>Количество баллов</h2>
+
+            <div className="profile-level">
+              <img src="/medic-icon.png" alt="" />
+              <div>
+                <div className="level-title">Уровень: интересующийся медик</div>
+                <div className="progress-bar">
+                  <div
+                    className="progress-fill"
+                    style={{ width: `${progress}%` }}
+                  />
+                </div>
+                <div className="progress-text">
+                  {reputation}/{levelMax}
+                </div>
+              </div>
             </div>
           </div>
+
+          {/* QUICK STATS */}
+          <div className="profile-quick">
+            <h2>Быстрая статистика</h2>
+
+            <div className="quick-list">
+              <div className="quick-item">📘 Материалов в избранном: 5</div>
+              <div className="quick-item">✅ Пройдено тем: 23</div>
+              <div className="quick-item">⭐ Добавлено пользователем: 2</div>
+              <div className="quick-item">➕ Создано тем на форуме: {user.posts_count ?? 0}</div>
+            </div>
+          </div>
+
         </div>
       </div>
     </>
