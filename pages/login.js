@@ -3,75 +3,86 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 
 export default function Login() {
-    const router = useRouter();
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [error, setError] = useState("");
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-    const submit = async (e) => {
-        e.preventDefault();
-        setError("");
+  const submit = async (e) => {
+    e.preventDefault();
+    if (loading) return;
 
-        const res = await fetch("/api/auth", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                type: "login",
-                email,
-                password
-            })
-        });
+    setLoading(true);
+    setError("");
 
-        const data = await res.json();
+    try {
+      const res = await fetch("/api/auth", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: "login",
+          email,
+          password
+        })
+      });
 
-        if (!res.ok) {
-            setError(data.message);
-            return;
-        }
+      const data = await res.json();
 
-        document.cookie = `user=${encodeURIComponent(
-            JSON.stringify(data.user)
-        )}; path=/`;
+      if (!res.ok) {
+        setError(data.message || "Ошибка входа");
+        setLoading(false);
+        return;
+      }
 
-        router.push("/profile");
-    };
+      // ✅ ВАЖНО:
+      // cookie sid уже установлен сервером
+      router.push("/profile");
 
-    return (
-        <>
-            <Head>
-                <link rel="stylesheet" href="/css/auth.css" />
-            </Head>
+    } catch (err) {
+      console.error("LOGIN ERROR:", err);
+      setError("Ошибка сервера");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-            <div className="auth-page">
-                <div className="auth-card">
-                    <h1>Вход</h1>
+  return (
+    <>
+      <Head>
+        <link rel="stylesheet" href="/css/auth.css" />
+      </Head>
 
-                    {error && <div className="auth-error">{error}</div>}
+      <div className="auth-page">
+        <div className="auth-card">
+          <h1>Вход</h1>
 
-                    <form className="auth-form" onSubmit={submit}>
-                        <input
-                            placeholder="Email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                        />
+          {error && <div className="auth-error">{error}</div>}
 
-                        <input
-                            type="password"
-                            placeholder="Пароль"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                        />
+          <form className="auth-form" onSubmit={submit}>
+            <input
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
 
-                        <button type="submit" className="auth-button">
-                            Войти
-                        </button>
-                    </form>
+            <input
+              type="password"
+              placeholder="Пароль"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
 
-                    <div className="auth-footer">
-                        Нет аккаунта? <a href="/register">Регистрация</a>
-                    </div>
-                </div>
-            </div>
-        </>
-    );
+            <button type="submit" className="auth-button" disabled={loading}>
+              {loading ? "Вход..." : "Войти"}
+            </button>
+          </form>
+
+          <div className="auth-footer">
+            Нет аккаунта? <a href="/register">Регистрация</a>
+          </div>
+        </div>
+      </div>
+    </>
+  );
 }
