@@ -1,4 +1,3 @@
-// pages/register.js
 import Head from "next/head";
 import { useState } from "react";
 import { useRouter } from "next/router";
@@ -9,12 +8,10 @@ export default function Register() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const submit = async (e) => {
-    e.preventDefault();
+  const submit = async () => {
     setError("");
 
     if (!username || !email || !password) {
@@ -27,9 +24,7 @@ export default function Register() {
     try {
       const res = await fetch("/api/auth", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           type: "register",
           username,
@@ -38,13 +33,7 @@ export default function Register() {
         })
       });
 
-      // ⛑ защита от пустого / не-JSON ответа
-      let data = {};
-      try {
-        data = await res.json();
-      } catch {
-        data = {};
-      }
+      const data = await res.json().catch(() => ({}));
 
       if (!res.ok) {
         setError(data.message || "Ошибка сервера");
@@ -52,12 +41,10 @@ export default function Register() {
         return;
       }
 
-      // ✅ регистрация успешна → пользователь УЖЕ авторизован (sid)
       router.push("/profile");
-
-    } catch (err) {
-      console.error("REGISTER FETCH ERROR:", err);
-      setError("Ошибка соединения с сервером");
+    } catch (e) {
+      console.error(e);
+      setError("Ошибка соединения");
     } finally {
       setLoading(false);
     }
@@ -75,37 +62,37 @@ export default function Register() {
 
           {error && <div className="auth-error">{error}</div>}
 
-          <form className="auth-form" onSubmit={submit}>
+          {/* ❌ БЕЗ onSubmit */}
+          <div className="auth-form">
             <input
               placeholder="Логин"
               value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              disabled={loading}
+              onChange={e => setUsername(e.target.value)}
             />
 
             <input
               placeholder="Email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              disabled={loading}
+              onChange={e => setEmail(e.target.value)}
             />
 
             <input
               type="password"
               placeholder="Пароль"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              disabled={loading}
+              onChange={e => setPassword(e.target.value)}
             />
 
+            {/* ❗ type="button" */}
             <button
-              type="submit"
+              type="button"
               className="auth-button"
+              onClick={submit}
               disabled={loading}
             >
               {loading ? "Создание..." : "Создать аккаунт"}
             </button>
-          </form>
+          </div>
 
           <div className="auth-footer">
             Уже есть аккаунт? <a href="/login">Войти</a>
