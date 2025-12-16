@@ -1,3 +1,4 @@
+// pages/login.js
 import Head from "next/head";
 import { useState } from "react";
 import { useRouter } from "next/router";
@@ -20,7 +21,7 @@ export default function Login() {
       const res = await fetch("/api/auth", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        credentials: "include", // 🔥 ВАЖНО
+        credentials: "include",
         body: JSON.stringify({
           type: "login",
           email,
@@ -28,7 +29,7 @@ export default function Login() {
         })
       });
 
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
 
       if (!res.ok) {
         setError(data.message || "Ошибка входа");
@@ -36,8 +37,24 @@ export default function Login() {
         return;
       }
 
-      // ✅ ВАЖНО:
-      // cookie sid уже установлен сервером
+      // Проверим /api/me чтобы убедиться, что cookie/sid применился
+      try {
+        const meRes = await fetch("/api/me", { credentials: "include" });
+        if (!meRes.ok) {
+          // сессия не установлена — показать ошибку
+          const errBody = await meRes.json().catch(() => ({}));
+          setError(errBody.error || "Не удалось подтвердить сессию");
+          setLoading(false);
+          return;
+        }
+      } catch (err) {
+        console.error("ME CHECK ERROR:", err);
+        setError("Ошибка проверки сессии");
+        setLoading(false);
+        return;
+      }
+
+      // Всё ок — редиректим
       router.push("/profile");
 
     } catch (err) {
@@ -65,6 +82,7 @@ export default function Login() {
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              disabled={loading}
             />
 
             <input
@@ -72,6 +90,7 @@ export default function Login() {
               placeholder="Пароль"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              disabled={loading}
             />
 
             <button type="submit" className="auth-button" disabled={loading}>
