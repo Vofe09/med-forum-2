@@ -66,6 +66,7 @@ export default async function handler(req, res) {
       await conn.rollback();
       console.error(err);
       res.status(500).json({ error: "Ошибка сервера" });
+      
     } finally {
       conn.release();
     }
