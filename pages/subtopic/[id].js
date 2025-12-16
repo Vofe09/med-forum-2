@@ -148,9 +148,9 @@ export default function Subtopic() {
 
       <header className="topbar">
         <div className="container">
-          <div className="logo">Arizona RP</div>
+          <div className="logo">MED - UNIT</div>
           <nav className="nav">
-            <Link href="/">Форумы</Link>
+            <Link href="/forum">Форумы</Link>
           </nav>
         </div>
       </header>
