@@ -34,14 +34,15 @@ export default async function handler(req, res) {
         const user = rows[0];
 
         // 3️⃣ возвращаем реальные данные пользователя
-        res.status(200).json({
-            message: "Регистрация успешна",
-            user: {
-                id: user.id,
-                username: user.username,
-                email: user.email
-            }
-        });
+            res.status(200).json({
+                message: "Регистрация успешна",
+                user: {
+                    id: user.id.toString(),
+                    username: user.username,
+                    email: user.email
+                }
+            });
+
     } catch (err) {
         if (err.code === "ER_DUP_ENTRY") {
             return res.status(400).json({ message: "Этот email уже используется" });

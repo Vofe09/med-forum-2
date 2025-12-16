@@ -34,7 +34,8 @@ export default async function handler(req, res) {
         res.status(200).json({
             message: "Вход выполнен",
             username: user.username,
-            id: user.id
+            id: user.id.toString()
+
         });
 
     } catch (err) {
