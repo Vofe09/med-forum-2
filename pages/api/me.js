@@ -1,16 +1,21 @@
 // pages/api/me.js
 import pool from "../../lib/db";
+import cookie from "cookie";
 
 export default async function handler(req, res) {
+  // 🚫 ВАЖНО: API с авторизацией НЕЛЬЗЯ кэшировать (Vercel / CDN)
+  res.removeHeader("ETag");
+  res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
+  res.setHeader("Pragma", "no-cache");
+  res.setHeader("Expires", "0");
+  res.setHeader("Surrogate-Control", "no-store");
+
   if (req.method !== "GET") {
     return res.status(405).json({ error: "Method Not Allowed" });
   }
 
-  // 🔐 читаем sid из cookie
-  const sid = req.headers.cookie
-    ?.split("; ")
-    .find(c => c.startsWith("sid="))
-    ?.split("=")[1];
+  // 🔐 корректно парсим cookie
+  const { sid } = cookie.parse(req.headers.cookie || "");
 
   if (!sid) {
     return res.status(401).json({ error: "Не авторизован" });
@@ -37,6 +42,7 @@ export default async function handler(req, res) {
       return res.status(401).json({ error: "Сессия не найдена" });
     }
 
+    // ✅ всегда 200 с телом
     return res.status(200).json(rows[0]);
 
   } catch (err) {
