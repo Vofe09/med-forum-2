@@ -1,81 +1,117 @@
+// pages/register.js
 import Head from "next/head";
 import { useState } from "react";
 import { useRouter } from "next/router";
 
 export default function Register() {
-    const router = useRouter();
-    const [username, setUsername] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [error, setError] = useState("");
+  const router = useRouter();
 
-    const submit = async (e) => {
-        e.preventDefault();
-        setError("");
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-        const res = await fetch("/api/auth", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                type: "register",
-                username,
-                email,
-                password
-            })
-        });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-        const data = await res.json();
+  const submit = async (e) => {
+    e.preventDefault();
+    setError("");
 
-        if (!res.ok) {
-            setError(data.message);
-            return;
-        }
+    if (!username || !email || !password) {
+      setError("Заполните все поля");
+      return;
+    }
 
-        router.push("/login");
-    };
+    setLoading(true);
 
-    return (
-        <>
-            <Head>
-                <link rel="stylesheet" href="/css/auth.css" />
-            </Head>
+    try {
+      const res = await fetch("/api/auth", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          type: "register",
+          username,
+          email,
+          password
+        })
+      });
 
-            <div className="auth-page">
-                <div className="auth-card">
-                    <h1>Регистрация</h1>
+      // ⛑ защита от пустого / не-JSON ответа
+      let data = {};
+      try {
+        data = await res.json();
+      } catch {
+        data = {};
+      }
 
-                    {error && <div className="auth-error">{error}</div>}
+      if (!res.ok) {
+        setError(data.message || "Ошибка сервера");
+        setLoading(false);
+        return;
+      }
 
-                    <form className="auth-form" onSubmit={submit}>
-                        <input
-                            placeholder="Логин"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
-                        />
+      // ✅ регистрация успешна → пользователь УЖЕ авторизован (sid)
+      router.push("/profile");
 
-                        <input
-                            placeholder="Email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                        />
+    } catch (err) {
+      console.error("REGISTER FETCH ERROR:", err);
+      setError("Ошибка соединения с сервером");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-                        <input
-                            type="password"
-                            placeholder="Пароль"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                        />
+  return (
+    <>
+      <Head>
+        <link rel="stylesheet" href="/css/auth.css" />
+      </Head>
 
-                        <button type="submit" className="auth-button">
-                            Создать аккаунт
-                        </button>
-                    </form>
+      <div className="auth-page">
+        <div className="auth-card">
+          <h1>Регистрация</h1>
 
-                    <div className="auth-footer">
-                        Уже есть аккаунт? <a href="/login">Войти</a>
-                    </div>
-                </div>
-            </div>
-        </>
-    );
+          {error && <div className="auth-error">{error}</div>}
+
+          <form className="auth-form" onSubmit={submit}>
+            <input
+              placeholder="Логин"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              disabled={loading}
+            />
+
+            <input
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              disabled={loading}
+            />
+
+            <input
+              type="password"
+              placeholder="Пароль"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              disabled={loading}
+            />
+
+            <button
+              type="submit"
+              className="auth-button"
+              disabled={loading}
+            >
+              {loading ? "Создание..." : "Создать аккаунт"}
+            </button>
+          </form>
+
+          <div className="auth-footer">
+            Уже есть аккаунт? <a href="/login">Войти</a>
+          </div>
+        </div>
+      </div>
+    </>
+  );
 }
