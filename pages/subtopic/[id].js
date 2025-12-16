@@ -14,12 +14,46 @@ export default function Subtopic() {
   const [sending, setSending] = useState(false);
   const [error, setError] = useState(null);
 
+  // auth state
+  const [user, setUser] = useState(null);
+  const [authChecked, setAuthChecked] = useState(false);
+
   const messagesEndRef = useRef(null);
 
-  // Проверка авторизации (cookie user)
-  const isAuth =
-    typeof document !== 'undefined' &&
-    document.cookie.includes('user=');
+  // вычисляем авторизацию по user из /api/me
+  const isAuth = Boolean(user);
+
+  /* =======================
+     Проверка авторизации
+     ======================= */
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      try {
+        const res = await fetch('/api/me', {
+          method: 'GET',
+          credentials: 'include',
+          cache: 'no-store'
+        });
+        if (!mounted) return;
+        if (!res.ok) {
+          setUser(null);
+        } else {
+          const data = await res.json().catch(() => null);
+          setUser(data || null);
+        }
+      } catch (err) {
+        console.error('Auth check error:', err);
+        setUser(null);
+      } finally {
+        if (mounted) setAuthChecked(true);
+      }
+    })();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   /* =======================
      Загрузка сообщений
@@ -33,18 +67,22 @@ export default function Subtopic() {
       const res = await fetch(`/api/messages/${encodeURIComponent(subtopicId)}`, {
         method: 'GET',
         signal,
+        credentials: 'include',
+        cache: 'no-store'
       });
 
       if (!res.ok) {
-        throw new Error(`Ошибка загрузки: ${res.status}`);
+        // попробуем получить тело ошибки
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body.error || `Ошибка загрузки: ${res.status}`);
       }
 
-      const data = await res.json();
+      const data = await res.json().catch(() => []);
       setMessages(Array.isArray(data) ? data : []);
     } catch (err) {
       if (err.name !== 'AbortError') {
         console.error(err);
-        setError('Не удалось загрузить сообщения');
+        setError(err.message || 'Не удалось загрузить сообщения');
         setMessages([]);
       }
     } finally {
@@ -81,6 +119,7 @@ export default function Subtopic() {
       const res = await fetch(`/api/messages/${encodeURIComponent(id)}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include', // ВАЖНО: отправляем cookie/sid
         body: JSON.stringify({ text }),
       });
 
@@ -89,6 +128,7 @@ export default function Subtopic() {
         throw new Error(body?.error || `Ошибка сервера: ${res.status}`);
       }
 
+      // reload messages after successful post
       await loadMessages(id);
       setNewMessage('');
     } catch (err) {
@@ -149,25 +189,29 @@ export default function Subtopic() {
 
         {/* ===== INPUT ===== */}
         <div className="message-input">
-          {!isAuth && (
+          {/* показываем подсказку, если пользователь не авторизован.
+              пока auth не проверен — показываем заглушку (чтобы не допустить гонки). */}
+          {!authChecked ? (
             <div style={{ color: 'var(--muted)', marginBottom: 10 }}>
-              Чтобы написать сообщение,{' '}
-              <Link href="/login">войдите</Link> или{' '}
-              <Link href="/register">зарегистрируйтесь</Link>.
+              Проверка авторизации...
             </div>
-          )}
+          ) : !isAuth ? (
+            <div style={{ color: 'var(--muted)', marginBottom: 10 }}>
+              Чтобы написать сообщение, <Link href="/login">войдите</Link> или <Link href="/register">зарегистрируйтесь</Link>.
+            </div>
+          ) : null}
 
           <textarea
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
             placeholder="Напишите сообщение..."
-            disabled={!isAuth || sending}
+            disabled={!authChecked || !isAuth || sending}
           />
 
           <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end', marginTop: 6 }}>
             <button
               onClick={handleSend}
-              disabled={!isAuth || sending || newMessage.trim() === ''}
+              disabled={!authChecked || !isAuth || sending || newMessage.trim() === ''}
             >
               {sending ? 'Отправка…' : 'Отправить'}
             </button>
