@@ -1,7 +1,6 @@
 import pool from "../../lib/db";
 import bcrypt from "bcryptjs";
 
-
 export default async function handler(req, res) {
     if (req.method !== "POST") {
         return res.status(405).json({ message: "Метод не разрешён" });
@@ -15,7 +14,7 @@ export default async function handler(req, res) {
 
     try {
         const [rows] = await pool.query(
-            "SELECT * FROM users WHERE email = ?",
+            "SELECT id, username, email, password FROM users WHERE email = ?",
             [email]
         );
 
@@ -26,20 +25,22 @@ export default async function handler(req, res) {
         const user = rows[0];
 
         const isValid = await bcrypt.compare(password, user.password);
-
         if (!isValid) {
             return res.status(400).json({ message: "Неверный пароль" });
         }
 
+        // 🔥 ВАЖНО: id → string
         res.status(200).json({
             message: "Вход выполнен",
-            username: user.username,
-            id: user.id.toString()
-
+            user: {
+                id: user.id.toString(),
+                username: user.username,
+                email: user.email
+            }
         });
 
     } catch (err) {
-        console.error(err);
+        console.error("LOGIN ERROR:", err);
         res.status(500).json({ message: "Ошибка сервера" });
     }
 }

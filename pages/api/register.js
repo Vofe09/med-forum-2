@@ -21,9 +21,9 @@ export default async function handler(req, res) {
             [username, email, hashed]
         );
 
-        // 2️⃣ СРАЗУ получаем реальный id из БД (важно для TiDB AUTO_RANDOM)
+        // 2️⃣ получаем реальный id (TiDB AUTO_RANDOM)
         const [rows] = await pool.query(
-            "SELECT id, username, email FROM users WHERE email = ?",
+            "SELECT id, username, email FROM users WHERE email = ? LIMIT 1",
             [email]
         );
 
@@ -33,15 +33,15 @@ export default async function handler(req, res) {
 
         const user = rows[0];
 
-        // 3️⃣ возвращаем реальные данные пользователя
-            res.status(200).json({
-                message: "Регистрация успешна",
-                user: {
-                    id: user.id.toString(),
-                    username: user.username,
-                    email: user.email
-                }
-            });
+        // 3️⃣ возвращаем данные (id как string!)
+        res.status(200).json({
+            message: "Регистрация успешна",
+            user: {
+                id: user.id.toString(),
+                username: user.username,
+                email: user.email
+            }
+        });
 
     } catch (err) {
         if (err.code === "ER_DUP_ENTRY") {
