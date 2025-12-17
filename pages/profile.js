@@ -81,6 +81,10 @@ export default function Profile() {
           <div className="profile-actions">
             <button onClick={() => router.push("/forum")}>Forum</button>
             <button className="logout" onClick={logout}>Log out</button>
+            <button onClick={() => router.push("/profile/edit")}>
+              Редактировать
+            </button>
+
           </div>
 
           {/* HEADER */}
@@ -94,8 +98,13 @@ export default function Profile() {
 
           <div className="profile-badges">
             <span className="badge">Статус: Студент медколледжа</span>
-            <span className="badge">Год обучения / опыт: 7 лет</span>
-            <span className="badge">Направление: Сестринское дело</span>
+            <span className="badge">
+              Год обучения: {user.study_year || "—"}
+            </span>
+            
+              <span className="badge">
+                Направление: {user.direction || "—"}
+              </span>
 
             {/* RANK BADGE */}
             <span
