@@ -52,8 +52,8 @@ export default function Home() {
                 </p>
               </div>
               <div className="node-stats">
-                <span>Тем: 120</span>
-                <span>Сообщений: 1 430</span>
+                <span></span>
+                <span></span>
               </div>
             </div>
             <div className="forum-node">
@@ -67,8 +67,8 @@ export default function Home() {
                 </p>
               </div>
               <div className="node-stats">
-                <span>Тем: 98</span>
-                <span>Сообщений: 2 012</span>
+                <span></span>
+                <span></span>
               </div>
             </div>
             <div className="forum-node">
@@ -82,8 +82,8 @@ export default function Home() {
                 </p>
               </div>
               <div className="node-stats">
-                <span>Тем: 76</span>
-                <span>Сообщений: 845</span>
+                <span></span>
+                <span></span>
               </div>
             </div>
           </section>
@@ -101,8 +101,8 @@ export default function Home() {
                 </p>
               </div>
               <div className="node-stats">
-                <span>Тем: 210</span>
-                <span>Сообщений: 3 540</span>
+                <span></span>
+                <span></span>
               </div>
             </div>
             <div className="forum-node">
@@ -115,8 +115,8 @@ export default function Home() {
                 </p>
               </div>
               <div className="node-stats">
-                <span>Тем: 154</span>
-                <span>Сообщений: 2 980</span>
+                <span></span>
+                <span></span>
               </div>
             </div>
             <div className="forum-node">
@@ -129,8 +129,8 @@ export default function Home() {
                 </p>
               </div>
               <div className="node-stats">
-                <span>Тем: 89</span>
-                <span>Сообщений: 1 120</span>
+                <span></span>
+                <span></span>
               </div>
             </div>
             <div className="forum-node">
@@ -143,8 +143,8 @@ export default function Home() {
                 </p>
               </div>
               <div className="node-stats">
-                <span>Тем: 67</span>
-                <span>Сообщений: 910</span>
+                <span></span>
+                <span></span>
               </div>
             </div>
             <div className="forum-node">
@@ -157,8 +157,8 @@ export default function Home() {
                 </p>
               </div>
               <div className="node-stats">
-                <span>Тем: 132</span>
-                <span>Сообщений: 2 300</span>
+                <span></span>
+                <span></span>
               </div>
             </div>
           </section>
@@ -176,8 +176,8 @@ export default function Home() {
                 </p>
               </div>
               <div className="node-stats">
-                <span>Тем: 145</span>
-                <span>Сообщений: 2 780</span>
+                <span></span>
+                <span></span>
               </div>
             </div>
             <div className="forum-node">
@@ -190,8 +190,8 @@ export default function Home() {
                 </p>
               </div>
               <div className="node-stats">
-                <span>Тем: 64</span>
-                <span>Сообщений: 520</span>
+                <span></span>
+                <span></span>
               </div>
             </div>
             <div className="forum-node">
@@ -204,8 +204,8 @@ export default function Home() {
                 </p>
               </div>
               <div className="node-stats">
-                <span>Тем: 58</span>
-                <span>Сообщений: 690</span>
+                <span></span>
+                <span></span>
               </div>
             </div>
           </section>
@@ -223,22 +223,22 @@ export default function Home() {
                 </p>
               </div>
               <div className="node-stats">
-                <span>Тем: 41</span>
-                <span>Сообщений: 360</span>
+                <span></span>
+                <span></span>
               </div>
             </div>
             <div className="forum-node">
               <div className="node-main">
                 <Link href="/subtopic/4-3" className="node-title">
-                  4.3 Карьера в медицине
+                  Карьера в медицине
                 </Link>
                 <p className="node-desc">
                   Специальности, резидентура, работа в больнице
                 </p>
               </div>
               <div className="node-stats">
-                <span>Тем: 72</span>
-                <span>Сообщений: 890</span>
+                <span></span>
+                <span></span>
               </div>
             </div>
           </section>
@@ -257,8 +257,8 @@ export default function Home() {
                 </p>
               </div>
               <div className="node-stats">
-                <span>Тем: 190</span>
-                <span>Сообщений: 4 560</span>
+                <span></span>
+                <span></span>
               </div>
             </div>
           </section>
