@@ -4,12 +4,13 @@ import bcrypt from "bcryptjs";
 import crypto from "crypto";
 
 export default async function handler(req, res) {
-  // CORS / preflight
   if (req.method === "OPTIONS") {
     res.setHeader("Allow", "POST, OPTIONS");
     return res.status(200).end();
   }
-  if (req.method !== "POST") return res.status(200).json({ ok: false });
+  if (req.method !== "POST") {
+    return res.status(405).json({ message: "Method not allowed" });
+  }
 
   const { type } = req.body;
   const conn = await pool.getConnection();
@@ -18,70 +19,95 @@ export default async function handler(req, res) {
     /* ========= REGISTER ========= */
     if (type === "register") {
       const { username, email, password } = req.body;
+
       if (!username || !email || !password) {
         return res.status(400).json({ message: "Заполните все поля" });
       }
 
+      // проверка уникальности
+      const [exists] = await conn.query(
+        "SELECT id FROM users WHERE email = ? OR username = ? LIMIT 1",
+        [email, username]
+      );
+
+      if (exists.length) {
+        return res.status(400).json({
+          message: "Пользователь с таким email или логином уже существует"
+        });
+      }
+
       const hashed = await bcrypt.hash(password, 10);
 
-      // вставляем пользователя
-      await conn.query(
+      const [result] = await conn.query(
         "INSERT INTO users (username, email, password) VALUES (?, ?, ?)",
         [username, email, hashed]
       );
 
-      // получаем реальный id через SELECT
-      const [rows] = await conn.query(
-        "SELECT id FROM users WHERE email = ? LIMIT 1",
-        [email]
-      );
-      if (!rows.length) throw new Error("User not found after insert");
+      const userId = String(result.insertId);
 
-      // ВАЖНО: приводим к строке, чтобы не потерять точность
-      const userId = String(rows[0].id);
-      console.log("REGISTER: userId (string) =", userId);
-
-      // создаём сессию — передаём строку
       const sid = crypto.randomBytes(32).toString("hex");
       await conn.query(
         "INSERT INTO sessions (id, user_id) VALUES (?, ?)",
         [sid, userId]
       );
 
-      res.setHeader("Set-Cookie", `sid=${sid}; Path=/; HttpOnly; SameSite=Lax`);
+      res.setHeader(
+        "Set-Cookie",
+        `sid=${sid}; Path=/; HttpOnly; SameSite=Lax`
+      );
+
       return res.status(200).json({ message: "Регистрация успешна" });
     }
 
     /* ========= LOGIN ========= */
     if (type === "login") {
-      const { email, password } = req.body;
-      if (!email || !password) {
-        return res.status(400).json({ message: "Введите email и пароль" });
+      const { login, password } = req.body;
+      // login = email ИЛИ username
+
+      if (!login || !password) {
+        return res.status(400).json({ message: "Введите логин и пароль" });
       }
 
       const [rows] = await conn.query(
-        "SELECT id, password FROM users WHERE email = ? LIMIT 1",
-        [email]
+        `
+        SELECT id, password
+        FROM users
+        WHERE email = ? OR username = ?
+        LIMIT 1
+        `,
+        [login, login]
       );
-      if (!rows.length) return res.status(400).json({ message: "Пользователь не найден" });
+
+      if (!rows.length) {
+        return res.status(400).json({ message: "Пользователь не найден" });
+      }
 
       const user = rows[0];
       const ok = await bcrypt.compare(password, user.password);
-      if (!ok) return res.status(400).json({ message: "Неверный пароль" });
+
+      if (!ok) {
+        return res.status(400).json({ message: "Неверный пароль" });
+      }
 
       const userId = String(user.id);
-      console.log("LOGIN: userId (string) =", userId);
-
       const sid = crypto.randomBytes(32).toString("hex");
-      await conn.query("INSERT INTO sessions (id, user_id) VALUES (?, ?)", [sid, userId]);
 
-      res.setHeader("Set-Cookie", `sid=${sid}; Path=/; HttpOnly; SameSite=Lax`);
+      await conn.query(
+        "INSERT INTO sessions (id, user_id) VALUES (?, ?)",
+        [sid, userId]
+      );
+
+      res.setHeader(
+        "Set-Cookie",
+        `sid=${sid}; Path=/; HttpOnly; SameSite=Lax`
+      );
+
       return res.status(200).json({ message: "Вход выполнен" });
     }
 
     return res.status(400).json({ message: "Неизвестный тип запроса" });
   } catch (err) {
-    console.error("AUTH ERROR FULL:", err);
+    console.error("AUTH ERROR:", err);
     return res.status(500).json({
       message: "Ошибка сервера",
       error: err.message

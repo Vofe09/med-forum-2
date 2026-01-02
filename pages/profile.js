@@ -153,8 +153,8 @@ export default function Profile() {
             <h2>Быстрая статистика</h2>
 
             <div className="quick-list">
-              <div className="quick-item">✅ Пройдено тем: 23</div>
-              <div className="quick-item">⭐ Добавлено пользователем: 0</div>
+              <div className="quick-item">✅ Пройдено тем: 0</div>
+              <div className="quick-item">⭐ Отправленно сообщений: 0</div>
               <div className="quick-item">
                 ➕ Создано тем на форуме: {user.posts_count ?? 0}
               </div>
