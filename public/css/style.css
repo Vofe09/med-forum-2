@@ -1,20 +1,16 @@
+/* ======= MAIN PALETTE (SYNC WITH OTHER PROJECT) ======= */
 :root {
-  /* Backgrounds */
-  --bg: #e6f8f7;
-  --panel: #d0f8f5;
-  --soft: #f2fdfc;
+  --bg-light: #e6f8f7;        /* основной фон */
+  --blue-main: #4fd1c5;       /* основной акцент */
+  --blue-light: #76e0d1;      /* панели / хедеры */
+  --blue-hover: #a0f0ea;      /* hover */
+  --blue-dark: #1f7a73;       /* активные состояния */
+  --soft-blue: #d0f8f5;       /* мягкие подложки */
 
-  /* Borders */
-  --border: #4fd1c5;
+  --text-dark: #1e293b;       /* основной текст */
+  --text-muted: #5f7c7a;      /* вторичный текст */
 
-  /* Text */
-  --text: #1e293b;
-  --muted: #5f7c7a;
-
-  /* Accents */
-  --accent: #4fd1c5;
-  --accent-hover: #1f7a73;
-  --success: #34d399;
+  --green-accent: #34d399;
 }
 
 /* =========================
@@ -24,12 +20,8 @@
 body {
   margin: 0;
   font-family: Inter, sans-serif;
-  background: var(--bg);
-  color: var(--text);
-}
-
-a {
-  color: inherit;
+  background: var(--bg-light);
+  color: var(--text-dark);
 }
 
 /* =========================
@@ -47,8 +39,8 @@ a {
 ========================= */
 
 .topbar {
-  background: var(--panel);
-  border-bottom: 1px solid var(--border);
+  background: var(--blue-light);
+  border-bottom: 1px solid var(--blue-main);
 }
 
 .topbar .container {
@@ -60,12 +52,13 @@ a {
 
 .nav a {
   margin-left: 16px;
-  color: var(--text);
+  color: var(--text-dark);
   text-decoration: none;
+  font-weight: 500;
 }
 
 .nav a:hover {
-  color: var(--accent-hover);
+  color: var(--blue-dark);
 }
 
 /* =========================
@@ -82,8 +75,8 @@ a {
 
 .thread-list {
   background: #ffffff;
-  border: 1px solid var(--border);
-  border-radius: 6px;
+  border: 1px solid var(--blue-main);
+  border-radius: 8px;
   overflow: hidden;
 }
 
@@ -92,7 +85,7 @@ a {
   grid-template-columns: 56px 1fr 160px 160px;
   gap: 16px;
   padding: 16px;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--soft-blue);
   align-items: center;
 }
 
@@ -101,11 +94,11 @@ a {
 }
 
 .thread:hover {
-  background: var(--soft);
+  background: var(--soft-blue);
 }
 
 .thread.locked {
-  opacity: 0.7;
+  opacity: 0.65;
 }
 
 /* =========================
@@ -121,39 +114,39 @@ a {
 }
 
 .thread-title a {
-  color: var(--accent);
+  color: var(--blue-main);
   text-decoration: none;
 }
 
 .thread-title a:hover {
-  color: var(--accent-hover);
+  color: var(--blue-dark);
 }
 
 .prefix {
-  background: var(--accent);
+  background: var(--blue-main);
   color: #ffffff;
   font-size: 12px;
   padding: 2px 6px;
-  border-radius: 4px;
+  border-radius: 6px;
   margin-right: 6px;
 }
 
 .thread-meta {
   font-size: 13px;
-  color: var(--muted);
+  color: var(--text-muted);
 }
 
 .thread-stats,
 .thread-last {
   text-align: center;
   font-size: 13px;
-  color: var(--muted);
+  color: var(--text-muted);
 }
 
 .thread-stats div strong {
   display: block;
   font-size: 15px;
-  color: var(--text);
+  color: var(--text-dark);
 }
 
 /* =========================
@@ -163,9 +156,9 @@ a {
 .footer {
   margin-top: 40px;
   padding: 16px 0;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--blue-main);
   font-size: 13px;
-  color: var(--muted);
+  color: var(--text-muted);
 }
 
 /* =========================
@@ -175,17 +168,18 @@ a {
 .forum-category {
   margin-bottom: 32px;
   background: #ffffff;
-  border: 1px solid var(--border);
-  border-radius: 6px;
+  border: 1px solid var(--blue-main);
+  border-radius: 8px;
   overflow: hidden;
 }
 
 .forum-category h2 {
   margin: 0;
-  background: var(--panel);
+  background: var(--blue-light);
   padding: 12px 16px;
   font-size: 16px;
-  border-bottom: 1px solid var(--border);
+  color: var(--text-dark);
+  border-bottom: 1px solid var(--blue-main);
 }
 
 /* =========================
@@ -196,7 +190,7 @@ a {
   display: flex;
   justify-content: space-between;
   padding: 14px 16px;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--soft-blue);
 }
 
 .forum-node:last-child {
@@ -204,28 +198,28 @@ a {
 }
 
 .forum-node:hover {
-  background: var(--soft);
+  background: var(--soft-blue);
 }
 
 .node-title {
   font-weight: 600;
-  color: var(--accent);
+  color: var(--blue-main);
   text-decoration: none;
 }
 
 .node-title:hover {
-  color: var(--accent-hover);
+  color: var(--blue-dark);
 }
 
 .node-desc {
   margin-top: 4px;
   font-size: 13px;
-  color: var(--muted);
+  color: var(--text-muted);
 }
 
 .node-stats {
   text-align: right;
   font-size: 13px;
-  color: var(--muted);
+  color: var(--text-muted);
   min-width: 140px;
 }
