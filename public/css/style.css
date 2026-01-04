@@ -1,23 +1,50 @@
 :root {
+  /* Backgrounds */
   --bg: #e6f8f7;
-  --panel: #76e0d1;
+  --panel: #d0f8f5;
+  --soft: #f2fdfc;
+
+  /* Borders */
   --border: #4fd1c5;
-  --text: #e0e0e0;
-  --muted: #9aa0a6;
+
+  /* Text */
+  --text: #1e293b;
+  --muted: #5f7c7a;
+
+  /* Accents */
   --accent: #4fd1c5;
+  --accent-hover: #1f7a73;
+  --success: #34d399;
 }
 
+/* =========================
+   BASE
+========================= */
+
 body {
+  margin: 0;
   font-family: Inter, sans-serif;
   background: var(--bg);
   color: var(--text);
 }
+
+a {
+  color: inherit;
+}
+
+/* =========================
+   LAYOUT
+========================= */
 
 .container {
   max-width: 1200px;
   margin: auto;
   padding: 0 16px;
 }
+
+/* =========================
+   TOP BAR
+========================= */
 
 .topbar {
   background: var(--panel);
@@ -37,11 +64,24 @@ body {
   text-decoration: none;
 }
 
+.nav a:hover {
+  color: var(--accent-hover);
+}
+
+/* =========================
+   TITLES
+========================= */
+
 .forum-title {
   margin: 24px 0;
 }
 
+/* =========================
+   THREAD LIST
+========================= */
+
 .thread-list {
+  background: #ffffff;
   border: 1px solid var(--border);
   border-radius: 6px;
   overflow: hidden;
@@ -60,9 +100,17 @@ body {
   border-bottom: none;
 }
 
+.thread:hover {
+  background: var(--soft);
+}
+
 .thread.locked {
   opacity: 0.7;
 }
+
+/* =========================
+   THREAD CONTENT
+========================= */
 
 .avatar img {
   border-radius: 50%;
@@ -77,9 +125,13 @@ body {
   text-decoration: none;
 }
 
+.thread-title a:hover {
+  color: var(--accent-hover);
+}
+
 .prefix {
-  background: #2d6cdf;
-  color: #fff;
+  background: var(--accent);
+  color: #ffffff;
   font-size: 12px;
   padding: 2px 6px;
   border-radius: 4px;
@@ -104,26 +156,41 @@ body {
   color: var(--text);
 }
 
+/* =========================
+   FOOTER
+========================= */
+
 .footer {
   margin-top: 40px;
   padding: 16px 0;
   border-top: 1px solid var(--border);
   font-size: 13px;
+  color: var(--muted);
 }
+
+/* =========================
+   FORUM CATEGORIES
+========================= */
 
 .forum-category {
   margin-bottom: 32px;
+  background: #ffffff;
   border: 1px solid var(--border);
   border-radius: 6px;
   overflow: hidden;
 }
 
 .forum-category h2 {
+  margin: 0;
   background: var(--panel);
   padding: 12px 16px;
   font-size: 16px;
   border-bottom: 1px solid var(--border);
 }
+
+/* =========================
+   FORUM NODES
+========================= */
 
 .forum-node {
   display: flex;
@@ -136,10 +203,18 @@ body {
   border-bottom: none;
 }
 
+.forum-node:hover {
+  background: var(--soft);
+}
+
 .node-title {
   font-weight: 600;
   color: var(--accent);
   text-decoration: none;
+}
+
+.node-title:hover {
+  color: var(--accent-hover);
 }
 
 .node-desc {
@@ -154,4 +229,3 @@ body {
   color: var(--muted);
   min-width: 140px;
 }
-
