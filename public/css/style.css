@@ -74,6 +74,7 @@ body {
 ========================= */
 
 .thread-list {
+  
   background: #ffffff;
   border: 1px solid var(--blue-main);
   border-radius: 8px;
