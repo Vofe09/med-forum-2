@@ -1,4 +1,3 @@
-// pages/profile.js
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
@@ -6,9 +5,15 @@ import { getRankByReputation } from "../utils/ranks";
 
 export default function Profile() {
   const router = useRouter();
+  const { test_code } = router.query;
+
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [codeConsumed, setCodeConsumed] = useState(false);
 
+  // ======================
+  // LOAD USER
+  // ======================
   useEffect(() => {
     let mounted = true;
 
@@ -26,7 +31,7 @@ export default function Profile() {
 
         const data = await res.json();
         if (mounted) setUser(data);
-      } catch (err) {
+      } catch {
         router.push("/login");
       } finally {
         if (mounted) setLoading(false);
@@ -37,6 +42,29 @@ export default function Profile() {
       mounted = false;
     };
   }, []);
+
+  // ======================
+  // CONSUME TEST CODE
+  // ======================
+  useEffect(() => {
+    if (!test_code || codeConsumed || loading) return;
+
+    (async () => {
+      try {
+        await fetch("/api/test-code/consume", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({ code: test_code }),
+        });
+      } finally {
+        setCodeConsumed(true);
+
+        // 🔥 убираем код из URL, чтобы не было повторного списания
+        router.replace("/profile", undefined, { shallow: true });
+      }
+    })();
+  }, [test_code, codeConsumed, loading]);
 
   const logout = async () => {
     try {
@@ -84,7 +112,6 @@ export default function Profile() {
             <button onClick={() => router.push("/profile/edit")}>
               Редактировать
             </button>
-
           </div>
 
           {/* HEADER */}
@@ -94,18 +121,18 @@ export default function Profile() {
             className="profile-avatar"
           />
 
-
           <h1 className="profile-name">{user.username}</h1>
 
           <div className="profile-badges">
             <span className="badge">Статус: Студент медколледжа</span>
+
             <span className="badge">
               Год обучения: {user.study_year || "—"}
             </span>
-            
-              <span className="badge">
-                Направление: {user.direction || "—"}
-              </span>
+
+            <span className="badge">
+              Направление: {user.direction || "—"}
+            </span>
 
             {/* RANK BADGE */}
             <span
@@ -154,8 +181,12 @@ export default function Profile() {
             <h2>Быстрая статистика</h2>
 
             <div className="quick-list">
-              <div className="quick-item">✅ Пройдено тем: 0</div>
-              <div className="quick-item">⭐ Отправленно сообщений: 0</div>
+              <div className="quick-item">
+                🧪 Пройдено тестов: {user.tests_passed ?? 0}
+              </div>
+              <div className="quick-item">
+                ⭐ Отправленно сообщений: 0
+              </div>
               <div className="quick-item">
                 ➕ Создано тем на форуме: {user.posts_count ?? 0}
               </div>
