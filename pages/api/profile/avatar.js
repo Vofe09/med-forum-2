@@ -2,25 +2,18 @@
 import pool from "../../../lib/db";
 import cookie from "cookie";
 
-const ALLOWED_HOSTS = [
-  "googleusercontent.com",
-  "lh3.googleusercontent.com",
-  "lh4.googleusercontent.com",
-  "lh5.googleusercontent.com",
-  "lh6.googleusercontent.com",
-  "i.imgur.com",
-  "images.unsplash.com",
-];
-
 function isValidImageUrl(url) {
   try {
     const u = new URL(url);
 
+    // только http / https
     if (!["http:", "https:"].includes(u.protocol)) return false;
 
-    return ALLOWED_HOSTS.some((host) =>
-      u.hostname.endsWith(host)
-    );
+    // защита от javascript:, data:, file:
+    if (url.startsWith("javascript:")) return false;
+    if (url.startsWith("data:")) return false;
+
+    return true;
   } catch {
     return false;
   }
@@ -44,7 +37,7 @@ export default async function handler(req, res) {
 
   if (!isValidImageUrl(avatarUrl)) {
     return res.status(400).json({
-      error: "Ссылка недопустима. Используй прямую ссылку на изображение",
+      error: "Некорректная ссылка на изображение",
     });
   }
 
@@ -56,10 +49,10 @@ export default async function handler(req, res) {
       SET u.avatar = ?
       WHERE s.id = ?
       `,
-      [avatarUrl, sid]
+      [avatarUrl.trim(), sid]
     );
 
-    return res.status(200).json({ avatar: avatarUrl });
+    return res.status(200).json({ avatar: avatarUrl.trim() });
   } catch (err) {
     console.error(err);
     return res.status(500).json({ error: "DB error" });
