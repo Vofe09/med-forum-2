@@ -31,7 +31,8 @@ export default async function handler(req, res) {
         u.posts_count,
         u.reputation,
         u.study_year,
-        u.direction
+        u.direction,
+        u.avatar
       FROM sessions s
       JOIN users u ON u.id = s.user_id
       WHERE s.id = ?

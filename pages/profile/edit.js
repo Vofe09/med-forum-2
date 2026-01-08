@@ -1,4 +1,3 @@
-// pages/profile/edit.js
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
@@ -9,19 +8,19 @@ const YEARS = [
   "3 курс",
   "4 курс",
   "Выпускник",
-  // 🔮 будущее
   "Учитель",
-  "Работник"
+  "Работник",
 ];
 
 const DIRECTIONS = [
   "Сестринское дело",
   "Лечебное дело",
-  "Стоматология"
+  "Стоматология",
 ];
 
 export default function EditProfile() {
   const router = useRouter();
+
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -30,6 +29,9 @@ export default function EditProfile() {
   const [year, setYear] = useState("");
   const [direction, setDirection] = useState("");
 
+  const [avatar, setAvatar] = useState(null);
+  const [avatarPreview, setAvatarPreview] = useState(null);
+
   useEffect(() => {
     let mounted = true;
 
@@ -37,7 +39,7 @@ export default function EditProfile() {
       try {
         const res = await fetch("/api/me", {
           credentials: "include",
-          cache: "no-store"
+          cache: "no-store",
         });
 
         if (!res.ok) {
@@ -51,6 +53,7 @@ export default function EditProfile() {
         setUser(data);
         setYear(data.study_year || "");
         setDirection(data.direction || "");
+        setAvatarPreview(data.avatar || null);
       } catch {
         router.push("/login");
       } finally {
@@ -61,25 +64,47 @@ export default function EditProfile() {
     return () => (mounted = false);
   }, []);
 
+  const uploadAvatar = async () => {
+    if (!avatar) return;
+
+    const form = new FormData();
+    form.append("avatar", avatar);
+
+    const res = await fetch("/api/profile/avatar", {
+      method: "POST",
+      credentials: "include",
+      body: form,
+    });
+
+    if (!res.ok) {
+      throw new Error("Ошибка загрузки аватара");
+    }
+  };
+
   const save = async () => {
     if (saving) return;
+
     setSaving(true);
     setError(null);
 
     try {
+      // 1️⃣ сначала загружаем аватар
+      await uploadAvatar();
+
+      // 2️⃣ затем обновляем профиль
       const res = await fetch("/api/profile/update", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
         body: JSON.stringify({
           study_year: year,
-          direction
-        })
+          direction,
+        }),
       });
 
       if (!res.ok) {
         const body = await res.json().catch(() => ({}));
-        throw new Error(body.error || "Ошибка сохранения");
+        throw new Error(body.error || "Ошибка сохранения профиля");
       }
 
       router.push("/profile");
@@ -110,13 +135,39 @@ export default function EditProfile() {
             </div>
           )}
 
+          {/* AVATAR */}
+          <div className="edit-field">
+            <label>Аватар</label>
+
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                setAvatar(file);
+                setAvatarPreview(URL.createObjectURL(file));
+              }}
+            />
+
+            <img
+              src={avatarPreview || "/avatar-placeholder.png"}
+              alt="avatar preview"
+              className="profile-avatar"
+              style={{ marginTop: 12 }}
+            />
+          </div>
+
           {/* YEAR */}
           <div className="edit-field">
             <label>Год обучения / статус</label>
             <select value={year} onChange={(e) => setYear(e.target.value)}>
               <option value="">— выбрать —</option>
-              {YEARS.map(y => (
-                <option key={y} value={y}>{y}</option>
+              {YEARS.map((y) => (
+                <option key={y} value={y}>
+                  {y}
+                </option>
               ))}
             </select>
           </div>
@@ -129,8 +180,10 @@ export default function EditProfile() {
               onChange={(e) => setDirection(e.target.value)}
             >
               <option value="">— выбрать —</option>
-              {DIRECTIONS.map(d => (
-                <option key={d} value={d}>{d}</option>
+              {DIRECTIONS.map((d) => (
+                <option key={d} value={d}>
+                  {d}
+                </option>
               ))}
             </select>
           </div>
