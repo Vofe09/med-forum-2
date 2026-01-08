@@ -29,7 +29,9 @@ export default async function handler(req, res) {
         u.username,
         u.email,
         u.posts_count,
-        u.reputation
+        u.reputation,
+        u.study_year,
+        u.direction
       FROM sessions s
       JOIN users u ON u.id = s.user_id
       WHERE s.id = ?
@@ -37,6 +39,7 @@ export default async function handler(req, res) {
       `,
       [sid]
     );
+
 
     if (!rows.length) {
       return res.status(401).json({ error: "Сессия не найдена" });
