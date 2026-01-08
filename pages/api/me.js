@@ -30,6 +30,7 @@ export default async function handler(req, res) {
         u.email,
         u.posts_count,
         u.reputation,
+        u.tests_passed,
         u.study_year,
         u.direction,
         u.avatar
