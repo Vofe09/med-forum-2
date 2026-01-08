@@ -1,14 +1,30 @@
-import fs from "fs";
-import path from "path";
-import formidable from "formidable";
+// pages/api/profile/avatar.js
 import pool from "../../../lib/db";
 import cookie from "cookie";
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
+const ALLOWED_HOSTS = [
+  "googleusercontent.com",
+  "lh3.googleusercontent.com",
+  "lh4.googleusercontent.com",
+  "lh5.googleusercontent.com",
+  "lh6.googleusercontent.com",
+  "i.imgur.com",
+  "images.unsplash.com",
+];
+
+function isValidImageUrl(url) {
+  try {
+    const u = new URL(url);
+
+    if (!["http:", "https:"].includes(u.protocol)) return false;
+
+    return ALLOWED_HOSTS.some((host) =>
+      u.hostname.endsWith(host)
+    );
+  } catch {
+    return false;
+  }
+}
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -16,55 +32,36 @@ export default async function handler(req, res) {
   }
 
   const { sid } = cookie.parse(req.headers.cookie || "");
-  if (!sid) return res.status(401).json({ error: "Not authorized" });
+  if (!sid) {
+    return res.status(401).json({ error: "Not authorized" });
+  }
 
-  const form = formidable({
-    maxFileSize: 5 * 1024 * 1024, // 5MB
-    keepExtensions: true,
-  });
+  const { avatarUrl } = req.body;
 
-  form.parse(req, async (err, fields, files) => {
-    if (err) {
-      return res.status(400).json({ error: "Upload error" });
-    }
+  if (!avatarUrl || typeof avatarUrl !== "string") {
+    return res.status(400).json({ error: "Invalid URL" });
+  }
 
-    const file = files.avatar;
-    if (!file) {
-      return res.status(400).json({ error: "No file" });
-    }
+  if (!isValidImageUrl(avatarUrl)) {
+    return res.status(400).json({
+      error: "Ссылка недопустима. Используй прямую ссылку на изображение",
+    });
+  }
 
-    const ext = path.extname(file.originalFilename).toLowerCase();
-    if (![".jpg", ".jpeg", ".png", ".webp"].includes(ext)) {
-      return res.status(400).json({ error: "Unsupported format" });
-    }
+  try {
+    await pool.query(
+      `
+      UPDATE users u
+      JOIN sessions s ON s.user_id = u.id
+      SET u.avatar = ?
+      WHERE s.id = ?
+      `,
+      [avatarUrl, sid]
+    );
 
-    const filename = `avatar_${Date.now()}${ext}`;
-    const uploadDir = path.join(process.cwd(), "public/uploads/avatars");
-    const filepath = path.join(uploadDir, filename);
-
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
-    }
-
-    fs.renameSync(file.filepath, filepath);
-
-    try {
-      await pool.query(
-        `
-        UPDATE users u
-        JOIN sessions s ON s.user_id = u.id
-        SET u.avatar = ?
-        WHERE s.id = ?
-        `,
-        [`/uploads/avatars/${filename}`, sid]
-      );
-
-      return res.status(200).json({
-        avatar: `/uploads/avatars/${filename}`,
-      });
-    } catch (e) {
-      console.error(e);
-      return res.status(500).json({ error: "DB error" });
-    }
-  });
+    return res.status(200).json({ avatar: avatarUrl });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: "DB error" });
+  }
 }

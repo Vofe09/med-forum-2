@@ -94,6 +94,7 @@ export default function Profile() {
             className="profile-avatar"
           />
 
+
           <h1 className="profile-name">{user.username}</h1>
 
           <div className="profile-badges">

@@ -29,8 +29,7 @@ export default function EditProfile() {
   const [year, setYear] = useState("");
   const [direction, setDirection] = useState("");
 
-  const [avatar, setAvatar] = useState(null);
-  const [avatarPreview, setAvatarPreview] = useState(null);
+  const [avatarUrl, setAvatarUrl] = useState("");
 
   useEffect(() => {
     let mounted = true;
@@ -53,7 +52,7 @@ export default function EditProfile() {
         setUser(data);
         setYear(data.study_year || "");
         setDirection(data.direction || "");
-        setAvatarPreview(data.avatar || null);
+        setAvatarUrl(data.avatar || "");
       } catch {
         router.push("/login");
       } finally {
@@ -64,23 +63,6 @@ export default function EditProfile() {
     return () => (mounted = false);
   }, []);
 
-  const uploadAvatar = async () => {
-    if (!avatar) return;
-
-    const form = new FormData();
-    form.append("avatar", avatar);
-
-    const res = await fetch("/api/profile/avatar", {
-      method: "POST",
-      credentials: "include",
-      body: form,
-    });
-
-    if (!res.ok) {
-      throw new Error("Ошибка загрузки аватара");
-    }
-  };
-
   const save = async () => {
     if (saving) return;
 
@@ -88,10 +70,22 @@ export default function EditProfile() {
     setError(null);
 
     try {
-      // 1️⃣ сначала загружаем аватар
-      await uploadAvatar();
+      // 1️⃣ сохраняем аватар по ссылке
+      if (avatarUrl) {
+        const avatarRes = await fetch("/api/profile/avatar", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({ avatarUrl }),
+        });
 
-      // 2️⃣ затем обновляем профиль
+        if (!avatarRes.ok) {
+          const body = await avatarRes.json().catch(() => ({}));
+          throw new Error(body.error || "Ошибка сохранения аватара");
+        }
+      }
+
+      // 2️⃣ сохраняем остальные поля
       const res = await fetch("/api/profile/update", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -135,24 +129,19 @@ export default function EditProfile() {
             </div>
           )}
 
-          {/* AVATAR */}
+          {/* AVATAR URL */}
           <div className="edit-field">
-            <label>Аватар</label>
+            <label>Аватар (ссылка на изображение)</label>
 
             <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => {
-                const file = e.target.files[0];
-                if (!file) return;
-
-                setAvatar(file);
-                setAvatarPreview(URL.createObjectURL(file));
-              }}
+              type="url"
+              placeholder="https://lh3.googleusercontent.com/..."
+              value={avatarUrl}
+              onChange={(e) => setAvatarUrl(e.target.value)}
             />
 
             <img
-              src={avatarPreview || "/avatar-placeholder.png"}
+              src={avatarUrl || "/avatar-placeholder.png"}
               alt="avatar preview"
               className="profile-avatar"
               style={{ marginTop: 12 }}
