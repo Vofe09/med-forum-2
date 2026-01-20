@@ -1,60 +1,71 @@
-// pages/api/verify-email.js
-import pool from "../lib/db";
-export const config = {
-  runtime: "nodejs"
-};
+// pages/verify-email.js
+import { useState } from "react";
+import { useRouter } from "next/router";
 
-export default async function handler(req, res) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ message: "Method not allowed" });
-  }
+export default function VerifyEmail() {
+  const router = useRouter();
+  const { email } = router.query;
 
-  const { email, code } = req.body;
+  const [code, setCode] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  if (!email || !code) {
-    return res.status(400).json({ message: "Email и код обязательны" });
-  }
+  const submit = async () => {
+    setError("");
 
-  const conn = await pool.getConnection();
-
-  try {
-    const [rows] = await conn.query(
-      `
-      SELECT ev.user_id, ev.expires_at
-      FROM email_verifications ev
-      JOIN users u ON u.id = ev.user_id
-      WHERE u.email = ? AND ev.code = ?
-      LIMIT 1
-      `,
-      [email, code]
-    );
-
-    if (!rows.length) {
-      return res.status(400).json({ message: "Неверный код" });
+    if (!code) {
+      setError("Введите код");
+      return;
     }
 
-    if (new Date(rows[0].expires_at) < new Date()) {
-      return res.status(400).json({ message: "Код истёк" });
+    setLoading(true);
+
+    try {
+      const res = await fetch("/api/verify-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, code })
+      });
+
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        setError(data.message || "Ошибка подтверждения");
+        return;
+      }
+
+      router.push("/login");
+    } catch (e) {
+      setError("Ошибка соединения");
+    } finally {
+      setLoading(false);
     }
+  };
 
-    const userId = rows[0].user_id;
+  return (
+    <div style={{ maxWidth: 400, margin: "50px auto" }}>
+      <h1>Подтверждение email</h1>
 
-    await conn.query(
-      "UPDATE users SET email_verified = 1 WHERE id = ?",
-      [userId]
-    );
+      <p>
+        Код отправлен на <b>{email}</b>
+      </p>
 
-    await conn.query(
-      "DELETE FROM email_verifications WHERE user_id = ?",
-      [userId]
-    );
+      {error && <p style={{ color: "red" }}>{error}</p>}
 
-    return res.status(200).json({ message: "Email подтверждён" });
+      <input
+        placeholder="Код из письма"
+        value={code}
+        onChange={e => setCode(e.target.value)}
+        style={{ width: "100%", padding: 10 }}
+      />
 
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({ message: "Ошибка сервера" });
-  } finally {
-    conn.release();
-  }
+      <button
+        onClick={submit}
+        disabled={loading}
+        style={{ width: "100%", marginTop: 10 }}
+      >
+        {loading ? "Проверка..." : "Подтвердить"}
+      </button>
+    </div>
+  );
 }
