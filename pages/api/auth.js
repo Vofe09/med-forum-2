@@ -69,7 +69,12 @@ export default async function handler(req, res) {
       );
 
       // Отправка email
-      await sendVerificationEmail(email, code);
+      try {
+        await sendVerificationEmail(email, code);
+      } catch (e) {
+        console.error("MAILERSEND ERROR:", e?.response?.data || e);
+      }
+
 
       // ❌ НЕ создаём сессию
       return res.status(200).json({
