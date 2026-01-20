@@ -1,6 +1,10 @@
 // pages/api/me.js
 import pool from "../../lib/db";
 import cookie from "cookie";
+export const config = {
+  runtime: "nodejs"
+};
+
 
 export default async function handler(req, res) {
   // 🚫 ВАЖНО: API с авторизацией НЕЛЬЗЯ кэшировать (Vercel / CDN)

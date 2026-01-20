@@ -1,5 +1,8 @@
 // pages/api/verify-email.js
 import pool from "../lib/db";
+export const config = {
+  runtime: "nodejs"
+};
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {

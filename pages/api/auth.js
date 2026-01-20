@@ -3,6 +3,10 @@ import pool from "../../lib/db";
 import { sendVerificationEmail } from "../../lib/mail";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
+export const config = {
+  runtime: "nodejs"
+};
+
 
 export default async function handler(req, res) {
   if (req.method === "OPTIONS") {
