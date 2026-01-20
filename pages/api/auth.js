@@ -1,5 +1,6 @@
 // pages/api/auth.js
 import pool from "../../lib/db";
+import { sendVerificationEmail } from "../../lib/mail";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
 
@@ -70,7 +71,7 @@ export default async function handler(req, res) {
 
       const [rows] = await conn.query(
         `
-        SELECT id, password
+        SELECT id, password, email_verified
         FROM users
         WHERE email = ? OR username = ?
         LIMIT 1
@@ -89,20 +90,34 @@ export default async function handler(req, res) {
         return res.status(400).json({ message: "Неверный пароль" });
       }
 
-      const userId = String(user.id);
-      const sid = crypto.randomBytes(32).toString("hex");
+      if (!user.email_verified) {
+        return res.status(403).json({
+          message: "Подтвердите email"
+        });
+      }
+      const userId = result.insertId;
+
+      // 🔐 код
+      const code = Math.floor(100000 + Math.random() * 900000).toString();
+      const expires = new Date(Date.now() + 10 * 60 * 1000);
 
       await conn.query(
-        "INSERT INTO sessions (id, user_id) VALUES (?, ?)",
-        [sid, userId]
+        `
+        INSERT INTO email_verifications (user_id, code, expires_at)
+        VALUES (?, ?, ?)
+        ON DUPLICATE KEY UPDATE code = ?, expires_at = ?
+        `,
+        [userId, code, expires, code, expires]
       );
 
-      res.setHeader(
-        "Set-Cookie",
-        `sid=${sid}; Path=/; HttpOnly; SameSite=Lax`
-      );
+      // ✉️ email
+      await sendVerificationEmail(email, code);
 
-      return res.status(200).json({ message: "Вход выполнен" });
+      // ❌ НИКАКИХ сессий
+      return res.status(200).json({
+        message: "Код подтверждения отправлен",
+        needVerify: true
+      });
     }
 
     return res.status(400).json({ message: "Неизвестный тип запроса" });

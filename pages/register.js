@@ -42,7 +42,8 @@ export default function Register() {
         return;
       }
 
-      router.push("/profile");
+      router.push(`/verify-email?email=${encodeURIComponent(email)}`);
+
     } catch (e) {
       console.error(e);
       setError("Ошибка соединения");
